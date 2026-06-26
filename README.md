@@ -76,6 +76,7 @@ godot-guard scan . --format json
 godot-guard scan . --format markdown
 godot-guard scan . --format markdown > godot-guard-report.md
 godot-guard scan . --format sarif > godot-guard.sarif
+godot-guard scan . --format sarif --output godot-guard.sarif
 godot-guard scan . --summary
 godot-guard scan . --fail-on warn
 ```
@@ -111,6 +112,7 @@ godot-guard scan .
 
 Use `--fail-on warn` for stricter CI, or `--fail-on none` when you want a report without failing the job.
 Use `--format sarif` when uploading results to GitHub code scanning.
+Use `--output <path>` to write reports directly from the CLI.
 
 For a copyable GitHub Actions workflow and rollout advice, see:
 
