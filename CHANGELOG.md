@@ -4,6 +4,7 @@ All notable changes to Godot Guard will be documented in this file.
 
 ## Unreleased
 
+- Added a tag-triggered GitHub Release workflow that verifies and attaches the npm tarball.
 - Added npm package metadata and a release checklist for first public publishing.
 - Added adoption docs, starter configs, and a copyable GitHub Actions workflow.
 - Added structured `.tscn` and `.tres` path extraction for Godot resource `path=` properties.

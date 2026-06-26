@@ -36,7 +36,11 @@ git tag v0.1.0
 git push origin v0.1.0
 ```
 
-Create a GitHub release from the pushed tag and copy the matching `CHANGELOG.md` entry into the release notes.
+Pushing a `v*` tag starts the Release workflow. It runs `npm run check`, creates an npm tarball with `npm pack`, and creates a GitHub Release with generated notes and the tarball attached.
+
+This workflow does not publish to npm. Keep `npm publish --access public` as a deliberate maintainer action.
+
+If the generated GitHub release notes need more detail, edit the GitHub Release after the workflow finishes and copy the matching `CHANGELOG.md` entry into the release notes.
 
 ## After Publishing
 
