@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatMarkdown, formatText } from "../src/reporters.js";
+import { formatMarkdown, formatSarif, formatText } from "../src/reporters.js";
 import type { ScanResult } from "../src/types.js";
 
 const result: ScanResult = {
@@ -27,5 +27,27 @@ describe("reporters", () => {
     expect(markdown).toContain("# Godot Guard Report");
     expect(markdown).toContain("## Issues");
     expect(markdown).toContain("`scenes/Main.tscn:3`");
+  });
+
+  it("formats SARIF reports", () => {
+    const sarif = JSON.parse(formatSarif(result));
+
+    expect(sarif.version).toBe("2.1.0");
+    expect(sarif.runs[0].tool.driver.name).toBe("Godot Guard");
+    expect(sarif.runs[0].tool.driver.rules[0].id).toBe("resources.missing_res_path");
+    expect(sarif.runs[0].results[0]).toMatchObject({
+      ruleId: "resources.missing_res_path",
+      level: "error",
+      locations: [{
+        physicalLocation: {
+          artifactLocation: {
+            uri: "scenes/Main.tscn"
+          },
+          region: {
+            startLine: 3
+          }
+        }
+      }]
+    });
   });
 });

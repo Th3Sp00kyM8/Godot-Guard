@@ -69,6 +69,51 @@ export function formatJson(result: ScanResult): string {
   return JSON.stringify(result, null, 2);
 }
 
+export function formatSarif(result: ScanResult): string {
+  const rules = [...new Set(result.issues.map((issue) => issue.code))]
+    .sort()
+    .map((code) => ({
+      id: code,
+      name: code,
+      shortDescription: {
+        text: code
+      }
+    }));
+
+  const sarif = {
+    version: "2.1.0",
+    $schema: "https://json.schemastore.org/sarif-2.1.0.json",
+    runs: [{
+      tool: {
+        driver: {
+          name: "Godot Guard",
+          informationUri: "https://github.com/Th3Sp00kyM8/Godot-Guard",
+          rules
+        }
+      },
+      results: result.issues.map((issue) => ({
+        ruleId: issue.code,
+        level: sarifLevel(issue.severity),
+        message: {
+          text: issue.suggestion ? `${issue.message} Suggestion: ${issue.suggestion}` : issue.message
+        },
+        locations: [{
+          physicalLocation: {
+            artifactLocation: {
+              uri: issue.file ?? "."
+            },
+            region: {
+              startLine: issue.line ?? 1
+            }
+          }
+        }]
+      }))
+    }]
+  };
+
+  return JSON.stringify(sarif, null, 2);
+}
+
 function formatSummaryLines(result: ScanResult): string[] {
   const severityCounts = countBy(result.issues.map((issue) => issue.severity));
   const codeCounts = countBy(result.issues.map((issue) => issue.code));
@@ -93,4 +138,16 @@ function formatCounts(counts: Record<string, number>): string {
     .sort(([left], [right]) => left.localeCompare(right))
     .map(([key, value]) => `${key}=${value}`)
     .join(", ");
+}
+
+function sarifLevel(severity: string): "error" | "warning" | "note" {
+  if (severity === "error") {
+    return "error";
+  }
+
+  if (severity === "warn") {
+    return "warning";
+  }
+
+  return "note";
 }
