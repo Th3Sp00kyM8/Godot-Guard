@@ -44,6 +44,12 @@ Then run it inside a Godot project:
 godot-guard scan .
 ```
 
+Check the installed version:
+
+```bash
+godot-guard --version
+```
+
 ## Usage
 
 ```bash
@@ -54,6 +60,7 @@ godot-guard resources .
 godot-guard scripts .
 godot-guard scan . --format json
 godot-guard scan . --format markdown
+godot-guard scan . --format markdown > godot-guard-report.md
 godot-guard scan . --summary
 ```
 
@@ -83,6 +90,16 @@ Godot Guard exits with code `1` when it finds an error-level issue, so it can be
 ```bash
 godot-guard scan .
 ```
+
+## Package Verification
+
+The npm package contents are controlled by the `files` field in `package.json`. Before publishing a release, run:
+
+```bash
+npm run check
+```
+
+This includes `npm pack --dry-run` so the tarball contents can be reviewed before publishing.
 
 ## Scope
 

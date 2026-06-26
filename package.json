@@ -9,12 +9,14 @@
   "files": [
     "dist",
     "README.md",
+    "CHANGELOG.md",
     "LICENSE"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "test": "vitest run",
-    "check": "npm run build && npm test"
+    "pack:check": "npm pack --dry-run",
+    "check": "npm run build && npm test && npm run pack:check"
   },
   "keywords": [
     "godot",
