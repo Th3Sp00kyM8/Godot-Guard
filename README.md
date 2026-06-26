@@ -76,6 +76,7 @@ godot-guard scan . --format json
 godot-guard scan . --format markdown
 godot-guard scan . --format markdown > godot-guard-report.md
 godot-guard scan . --summary
+godot-guard scan . --fail-on warn
 ```
 
 ## Config
@@ -106,6 +107,8 @@ Godot Guard exits with code `1` when it finds an error-level issue, so it can be
 ```bash
 godot-guard scan .
 ```
+
+Use `--fail-on warn` for stricter CI, or `--fail-on none` when you want a report without failing the job.
 
 For a copyable GitHub Actions workflow and rollout advice, see:
 
