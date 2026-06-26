@@ -4,6 +4,7 @@ All notable changes to Godot Guard will be documented in this file.
 
 ## Unreleased
 
+- Added adoption docs, starter configs, and a copyable GitHub Actions workflow.
 - Added structured `.tscn` and `.tres` path extraction for Godot resource `path=` properties.
 - Added case-sensitive `res://` path mismatch detection.
 - Changed extensionless missing `res://` references to warnings for likely directory or path-prefix usage.

@@ -93,6 +93,13 @@ Godot Guard exits with code `1` when it finds an error-level issue, so it can be
 godot-guard scan .
 ```
 
+For a copyable GitHub Actions workflow and rollout advice, see:
+
+- `docs/adoption.md`
+- `examples/github-actions/godot-guard.yml`
+- `examples/configs/low-noise.json`
+- `examples/configs/strict.json`
+
 ## Package Verification
 
 The npm package contents are controlled by the `files` field in `package.json`. Before publishing a release, run:
