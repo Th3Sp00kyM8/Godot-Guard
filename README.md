@@ -75,6 +75,7 @@ godot-guard scripts .
 godot-guard scan . --format json
 godot-guard scan . --format markdown
 godot-guard scan . --format markdown > godot-guard-report.md
+godot-guard scan . --format sarif > godot-guard.sarif
 godot-guard scan . --summary
 godot-guard scan . --fail-on warn
 ```
@@ -109,6 +110,7 @@ godot-guard scan .
 ```
 
 Use `--fail-on warn` for stricter CI, or `--fail-on none` when you want a report without failing the job.
+Use `--format sarif` when uploading results to GitHub code scanning.
 
 For a copyable GitHub Actions workflow and rollout advice, see:
 
@@ -116,6 +118,7 @@ For a copyable GitHub Actions workflow and rollout advice, see:
 - `examples/godot-projects/broken-ai-pass`
 - `examples/reports/broken-ai-pass.md`
 - `examples/github-actions/godot-guard.yml`
+- `examples/github-actions/godot-guard-sarif.yml`
 - `examples/configs/low-noise.json`
 - `examples/configs/strict.json`
 

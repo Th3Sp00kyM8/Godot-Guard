@@ -2,7 +2,7 @@
 import { createRequire } from "node:module";
 import { parseFailOn, shouldFail, type FailOn } from "./failure.js";
 import { initConfig } from "./init.js";
-import { formatJson, formatMarkdown, formatText } from "./reporters.js";
+import { formatJson, formatMarkdown, formatSarif, formatText } from "./reporters.js";
 import { scan } from "./scan.js";
 import type { ScanOptions } from "./types.js";
 
@@ -48,7 +48,7 @@ interface ParsedArgs {
   command: "scan" | "project" | "resources" | "scripts" | "init";
   root: string;
   options: ScanOptions;
-  format: "text" | "json" | "markdown";
+  format: "text" | "json" | "markdown" | "sarif";
   failOn: FailOn;
   force: boolean;
   help: boolean;
@@ -93,8 +93,8 @@ function parseArgs(args: string[]): ParsedArgs {
 
     if (arg === "--format") {
       const value = args[index + 1];
-      if (value !== "text" && value !== "json" && value !== "markdown") {
-        throw new Error("--format must be `text`, `json`, or `markdown`.");
+      if (value !== "text" && value !== "json" && value !== "markdown" && value !== "sarif") {
+        throw new Error("--format must be `text`, `json`, `markdown`, or `sarif`.");
       }
       format = value;
       index += 1;
@@ -163,6 +163,10 @@ function formatResult(result: Awaited<ReturnType<typeof scan>>, parsed: ParsedAr
     return formatMarkdown(result, { summaryOnly: parsed.summaryOnly });
   }
 
+  if (parsed.format === "sarif") {
+    return formatSarif(result);
+  }
+
   return formatText(result, { summaryOnly: parsed.summaryOnly });
 }
 
@@ -177,7 +181,8 @@ Usage:
   godot-guard scripts [project-path]
 
 Options:
-  --format text|json|markdown   Output format. Defaults to text.
+  --format text|json|markdown|sarif
+                                Output format. Defaults to text.
   --summary                     Show only counts and categories.
   --fail-on error|warn|none     Exit with code 1 on this severity threshold. Defaults to error.
   --config <path>               Config path relative to the project root.
