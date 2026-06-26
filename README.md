@@ -97,6 +97,8 @@ Create `godot-guard.config.json` in your Godot project root:
 }
 ```
 
+Config problems are reported as `config.*` issues, including invalid JSON, wrong field types, and invalid regex patterns.
+
 ## CI
 
 Godot Guard exits with code `1` when it finds an error-level issue, so it can be used in CI:
