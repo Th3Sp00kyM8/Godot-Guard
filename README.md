@@ -110,6 +110,8 @@ godot-guard scan .
 For a copyable GitHub Actions workflow and rollout advice, see:
 
 - `docs/adoption.md`
+- `examples/godot-projects/broken-ai-pass`
+- `examples/reports/broken-ai-pass.md`
 - `examples/github-actions/godot-guard.yml`
 - `examples/configs/low-noise.json`
 - `examples/configs/strict.json`

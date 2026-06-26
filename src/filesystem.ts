@@ -57,7 +57,9 @@ export async function findCaseMismatch(root: string, filePath: string): Promise<
 
     const caseInsensitive = entries.find((entry) => entry.toLowerCase() === segment.toLowerCase());
     if (caseInsensitive) {
-      return `${path.join(current, segment)} differs from disk casing ${path.join(current, caseInsensitive)}`;
+      const requestedPath = toRelative(root, path.join(current, segment));
+      const diskPath = toRelative(root, path.join(current, caseInsensitive));
+      return `${requestedPath} differs from disk casing ${diskPath}`;
     }
 
     return undefined;
