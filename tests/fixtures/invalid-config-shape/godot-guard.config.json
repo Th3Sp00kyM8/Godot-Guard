@@ -1,0 +1,7 @@
+{
+  "requiredAutoloads": "SaveSystem",
+  "ignoredPathPatterns": ["["],
+  "gdscript": {
+    "requireReturnTypes": "yes"
+  }
+}

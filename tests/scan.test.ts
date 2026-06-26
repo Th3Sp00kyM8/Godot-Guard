@@ -40,4 +40,28 @@ describe("scan", () => {
 
     expect(result.issues).toEqual([]);
   });
+
+  it("reports invalid JSON config as a scan issue", async () => {
+    const result = await scan({
+      root: path.join(fixtures, "invalid-config-json"),
+      command: "resources",
+      configPath: "godot-guard.config.json"
+    });
+
+    expect(result.issues.map((issue) => issue.code)).toEqual(["config.invalid_json"]);
+  });
+
+  it("reports invalid config field types and regex patterns", async () => {
+    const result = await scan({
+      root: path.join(fixtures, "invalid-config-shape"),
+      command: "resources",
+      configPath: "godot-guard.config.json"
+    });
+
+    expect(result.issues.map((issue) => issue.code)).toEqual([
+      "config.invalid_field_type",
+      "config.invalid_regex",
+      "config.invalid_field_type"
+    ]);
+  });
 });
