@@ -1,5 +1,7 @@
 #!/usr/bin/env node
+import { mkdir, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
+import path from "node:path";
 import { parseFailOn, shouldFail, type FailOn } from "./failure.js";
 import { initConfig } from "./init.js";
 import { formatJson, formatMarkdown, formatSarif, formatText } from "./reporters.js";
@@ -37,7 +39,12 @@ async function main(): Promise<void> {
 
   const result = await scan(parsed.options);
   const output = formatResult(result, parsed);
-  console.log(output);
+
+  if (parsed.outputPath) {
+    await writeOutput(parsed.outputPath, output);
+  } else {
+    console.log(output);
+  }
 
   if (shouldFail(result.issues, parsed.failOn)) {
     process.exitCode = 1;
@@ -50,6 +57,7 @@ interface ParsedArgs {
   options: ScanOptions;
   format: "text" | "json" | "markdown" | "sarif";
   failOn: FailOn;
+  outputPath?: string;
   force: boolean;
   help: boolean;
   summaryOnly: boolean;
@@ -61,6 +69,7 @@ function parseArgs(args: string[]): ParsedArgs {
   let root = ".";
   let format: ParsedArgs["format"] = "text";
   let failOn: FailOn = "error";
+  let outputPath: string | undefined;
   let configPath: string | undefined;
   let force = false;
   let help = false;
@@ -117,6 +126,16 @@ function parseArgs(args: string[]): ParsedArgs {
       continue;
     }
 
+    if (arg === "--output") {
+      const value = args[index + 1];
+      if (!value) {
+        throw new Error("--output requires a path.");
+      }
+      outputPath = value;
+      index += 1;
+      continue;
+    }
+
     positionals.push(arg);
   }
 
@@ -134,6 +153,7 @@ function parseArgs(args: string[]): ParsedArgs {
       options: { root, command: "scan", configPath },
       format,
       failOn,
+      outputPath,
       force,
       help,
       summaryOnly,
@@ -147,6 +167,7 @@ function parseArgs(args: string[]): ParsedArgs {
     options: { root, command: command as ScanOptions["command"], configPath },
     format,
     failOn,
+    outputPath,
     force,
     help,
     summaryOnly,
@@ -170,6 +191,12 @@ function formatResult(result: Awaited<ReturnType<typeof scan>>, parsed: ParsedAr
   return formatText(result, { summaryOnly: parsed.summaryOnly });
 }
 
+async function writeOutput(outputPath: string, output: string): Promise<void> {
+  const resolved = path.resolve(outputPath);
+  await mkdir(path.dirname(resolved), { recursive: true });
+  await writeFile(resolved, `${output}\n`, "utf8");
+}
+
 function printHelp(): void {
   console.log(`Godot Guard
 
@@ -185,6 +212,7 @@ Options:
                                 Output format. Defaults to text.
   --summary                     Show only counts and categories.
   --fail-on error|warn|none     Exit with code 1 on this severity threshold. Defaults to error.
+  --output <path>               Write report output to a file instead of stdout.
   --config <path>               Config path relative to the project root.
   --force                       Overwrite config when using init.
   -v, --version                 Show the package version.
