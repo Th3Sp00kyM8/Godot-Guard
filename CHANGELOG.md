@@ -4,6 +4,7 @@ All notable changes to Godot Guard will be documented in this file.
 
 ## Unreleased
 
+- Added `--fail-on error|warn|none` to control CI exit-code behavior.
 - Added a tiny broken Godot example project and sample Markdown report.
 - Changed case-mismatch suggestions to use project-relative paths instead of absolute local paths.
 - Added config validation for invalid JSON, wrong field types, and invalid regex patterns.

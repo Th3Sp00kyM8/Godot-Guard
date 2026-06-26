@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { createRequire } from "node:module";
+import { parseFailOn, shouldFail, type FailOn } from "./failure.js";
 import { initConfig } from "./init.js";
 import { formatJson, formatMarkdown, formatText } from "./reporters.js";
 import { scan } from "./scan.js";
@@ -38,7 +39,7 @@ async function main(): Promise<void> {
   const output = formatResult(result, parsed);
   console.log(output);
 
-  if (result.issues.some((issue) => issue.severity === "error")) {
+  if (shouldFail(result.issues, parsed.failOn)) {
     process.exitCode = 1;
   }
 }
@@ -48,6 +49,7 @@ interface ParsedArgs {
   root: string;
   options: ScanOptions;
   format: "text" | "json" | "markdown";
+  failOn: FailOn;
   force: boolean;
   help: boolean;
   summaryOnly: boolean;
@@ -58,6 +60,7 @@ function parseArgs(args: string[]): ParsedArgs {
   let command: ParsedArgs["command"] = "scan";
   let root = ".";
   let format: ParsedArgs["format"] = "text";
+  let failOn: FailOn = "error";
   let configPath: string | undefined;
   let force = false;
   let help = false;
@@ -98,6 +101,12 @@ function parseArgs(args: string[]): ParsedArgs {
       continue;
     }
 
+    if (arg === "--fail-on") {
+      failOn = parseFailOn(args[index + 1]);
+      index += 1;
+      continue;
+    }
+
     if (arg === "--config") {
       const value = args[index + 1];
       if (!value) {
@@ -124,6 +133,7 @@ function parseArgs(args: string[]): ParsedArgs {
       root,
       options: { root, command: "scan", configPath },
       format,
+      failOn,
       force,
       help,
       summaryOnly,
@@ -136,6 +146,7 @@ function parseArgs(args: string[]): ParsedArgs {
     root,
     options: { root, command: command as ScanOptions["command"], configPath },
     format,
+    failOn,
     force,
     help,
     summaryOnly,
@@ -168,6 +179,7 @@ Usage:
 Options:
   --format text|json|markdown   Output format. Defaults to text.
   --summary                     Show only counts and categories.
+  --fail-on error|warn|none     Exit with code 1 on this severity threshold. Defaults to error.
   --config <path>               Config path relative to the project root.
   --force                       Overwrite config when using init.
   -v, --version                 Show the package version.
