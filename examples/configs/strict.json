@@ -1,0 +1,18 @@
+{
+  "requiredAutoloads": [
+    "SaveSystem",
+    "AudioBus"
+  ],
+  "requiredInputActions": [
+    "ui_accept",
+    "ui_cancel"
+  ],
+  "gdscript": {
+    "requireReturnTypes": true,
+    "requireTypedVars": true
+  },
+  "ignoredPathPatterns": [
+    "^addons/"
+  ],
+  "allowedMissingResourcePatterns": []
+}

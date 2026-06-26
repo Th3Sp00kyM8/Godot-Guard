@@ -1,0 +1,19 @@
+{
+  "requiredAutoloads": [],
+  "requiredInputActions": [],
+  "gdscript": {
+    "requireReturnTypes": false,
+    "requireTypedVars": false
+  },
+  "ignoredPathPatterns": [
+    "^tests/",
+    "^addons/",
+    "^prototype/",
+    "^prototypes/"
+  ],
+  "allowedMissingResourcePatterns": [
+    "^res://__none__\\.",
+    "^res://nonexistent\\.",
+    "^res://imaginary/"
+  ]
+}
