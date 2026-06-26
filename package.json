@@ -3,6 +3,15 @@
   "version": "0.1.0",
   "description": "A local health checker for AI-assisted Godot projects.",
   "type": "module",
+  "author": "Th3Sp00kyM8",
+  "homepage": "https://github.com/Th3Sp00kyM8/Godot-Guard#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Th3Sp00kyM8/Godot-Guard.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Th3Sp00kyM8/Godot-Guard/issues"
+  },
   "bin": {
     "godot-guard": "./dist/cli.js"
   },
@@ -30,6 +39,12 @@
     "vibe-coding"
   ],
   "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "devDependencies": {
     "@types/node": "^20.14.10",
     "typescript": "^5.5.3",
