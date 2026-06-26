@@ -1,0 +1,5 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Resource" path="res://assets/missing_folder" id="1_dir"]
+
+[node name="DirectoryPrefix" type="Node2D"]

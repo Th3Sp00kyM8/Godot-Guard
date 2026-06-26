@@ -25,7 +25,9 @@ describe("scan", () => {
     expect(result.issues.map((issue) => issue.code)).toEqual(expect.arrayContaining([
       "project.main_scene_missing",
       "project.autoload_script_missing",
-      "resources.missing_res_path"
+      "resources.missing_res_path",
+      "resources.missing_res_directory",
+      "resources.res_path_case_mismatch"
     ]));
   });
 
