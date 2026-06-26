@@ -32,7 +32,19 @@ Godot Guard is built for teams and solo developers using AI assistants to move q
 
 ## Install
 
-This project is currently in early development. From a local checkout:
+After the package is published to npm:
+
+```bash
+npm install -g godot-guard
+```
+
+Or run without installing:
+
+```bash
+npx godot-guard scan .
+```
+
+During early development, from a local checkout:
 
 ```bash
 npm install
@@ -109,6 +121,8 @@ npm run check
 ```
 
 This includes `npm pack --dry-run` so the tarball contents can be reviewed before publishing.
+
+For the full release checklist, see `docs/release.md`.
 
 ## Scope
 
