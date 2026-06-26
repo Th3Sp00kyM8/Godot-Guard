@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { createRequire } from "node:module";
 import { initConfig } from "./init.js";
 import { formatJson, formatMarkdown, formatText } from "./reporters.js";
 import { scan } from "./scan.js";
@@ -6,12 +7,19 @@ import type { ScanOptions } from "./types.js";
 
 const SCAN_COMMANDS = new Set(["scan", "project", "resources", "scripts"]);
 const VALID_COMMANDS = new Set([...SCAN_COMMANDS, "init"]);
+const require = createRequire(import.meta.url);
+const packageJson = require("../package.json") as { version: string };
 
 async function main(): Promise<void> {
   const parsed = parseArgs(process.argv.slice(2));
 
   if (parsed.help) {
     printHelp();
+    return;
+  }
+
+  if (parsed.version) {
+    console.log(packageJson.version);
     return;
   }
 
@@ -43,6 +51,7 @@ interface ParsedArgs {
   force: boolean;
   help: boolean;
   summaryOnly: boolean;
+  version: boolean;
 }
 
 function parseArgs(args: string[]): ParsedArgs {
@@ -53,6 +62,7 @@ function parseArgs(args: string[]): ParsedArgs {
   let force = false;
   let help = false;
   let summaryOnly = false;
+  let version = false;
   const positionals: string[] = [];
 
   for (let index = 0; index < args.length; index += 1) {
@@ -60,6 +70,11 @@ function parseArgs(args: string[]): ParsedArgs {
 
     if (arg === "--help" || arg === "-h") {
       help = true;
+      continue;
+    }
+
+    if (arg === "--version" || arg === "-v") {
+      version = true;
       continue;
     }
 
@@ -111,7 +126,8 @@ function parseArgs(args: string[]): ParsedArgs {
       format,
       force,
       help,
-      summaryOnly
+      summaryOnly,
+      version
     };
   }
 
@@ -122,7 +138,8 @@ function parseArgs(args: string[]): ParsedArgs {
     format,
     force,
     help,
-    summaryOnly
+    summaryOnly,
+    version
   };
 }
 
@@ -153,6 +170,7 @@ Options:
   --summary                     Show only counts and categories.
   --config <path>               Config path relative to the project root.
   --force                       Overwrite config when using init.
+  -v, --version                 Show the package version.
   -h, --help                    Show this help.
 `);
 }
