@@ -32,3 +32,9 @@ export function isConcreteResourcePath(resPath: string): boolean {
 
   return true;
 }
+
+export function hasFileExtension(resPath: string): boolean {
+  const withoutPrefix = resPath.replace(/^res:\/\//, "");
+  const lastSegment = withoutPrefix.split("/").pop() ?? "";
+  return /\.[A-Za-z0-9_+-]+$/.test(lastSegment);
+}

@@ -15,7 +15,9 @@ Godot Guard is designed to be a small local safety pass you can run before openi
 - Missing autoload script paths
 - Required autoloads from config
 - Required input actions from config
-- Broken `res://` references in `.tscn`, `.tres`, `.gd`, `.gdshader`, and `.import` files
+- Broken `res://` references in `.tscn`, `.tres`, `.gd`, and `.gdshader` files
+- Case-sensitive `res://` path mismatches that Windows can hide
+- Missing directory-like `res://` prefixes reported as warnings instead of hard errors
 - Optional GDScript return-type and variable-type warnings
 
 ## Vibe-Coding Guardrails
