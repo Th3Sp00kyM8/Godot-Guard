@@ -30,3 +30,8 @@ export interface ScanResult {
   root: string;
   issues: Issue[];
 }
+
+export interface InitResult {
+  configPath: string;
+  created: boolean;
+}

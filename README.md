@@ -18,6 +18,16 @@ Godot Guard is designed to be a small local safety pass you can run before openi
 - Broken `res://` references in `.tscn`, `.tres`, `.gd`, `.gdshader`, and `.import` files
 - Optional GDScript return-type and variable-type warnings
 
+## Vibe-Coding Guardrails
+
+Godot Guard is built for teams and solo developers using AI assistants to move quickly. It focuses on mistakes that are easy for generated code to introduce and hard to diagnose later:
+
+- invented `res://` paths
+- scenes pointing at scripts that do not exist
+- autoload entries drifting away from real files
+- input actions removed from `project.godot`
+- placeholder resource strings accidentally treated like real assets
+
 ## Install
 
 This project is currently in early development. From a local checkout:
@@ -37,11 +47,14 @@ godot-guard scan .
 ## Usage
 
 ```bash
+godot-guard init .
 godot-guard scan .
 godot-guard project .
 godot-guard resources .
 godot-guard scripts .
 godot-guard scan . --format json
+godot-guard scan . --format markdown
+godot-guard scan . --summary
 ```
 
 ## Config
