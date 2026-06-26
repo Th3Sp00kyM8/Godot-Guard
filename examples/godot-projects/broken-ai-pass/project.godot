@@ -1,0 +1,15 @@
+[application]
+
+config/name="Broken AI Pass"
+run/main_scene="res://scenes/Main.tscn"
+
+[autoload]
+
+SaveSystem="*res://scripts/MissingSaveSystem.gd"
+
+[input]
+
+ui_accept={
+"deadzone": 0.5,
+"events": []
+}

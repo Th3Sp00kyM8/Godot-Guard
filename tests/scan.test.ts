@@ -29,6 +29,8 @@ describe("scan", () => {
       "resources.missing_res_directory",
       "resources.res_path_case_mismatch"
     ]));
+    expect(result.issues.find((issue) => issue.code === "resources.res_path_case_mismatch")?.suggestion)
+      .toContain("assets/actualcase.png differs from disk casing assets/ActualCase.png");
   });
 
   it("supports ignoring paths by config pattern", async () => {

@@ -1,0 +1,8 @@
+{
+  "requiredAutoloads": ["SaveSystem", "AudioBus"],
+  "requiredInputActions": ["ui_accept", "interact"],
+  "gdscript": {
+    "requireReturnTypes": true,
+    "requireTypedVars": true
+  }
+}

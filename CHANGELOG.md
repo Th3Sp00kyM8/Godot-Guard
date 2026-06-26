@@ -4,6 +4,8 @@ All notable changes to Godot Guard will be documented in this file.
 
 ## Unreleased
 
+- Added a tiny broken Godot example project and sample Markdown report.
+- Changed case-mismatch suggestions to use project-relative paths instead of absolute local paths.
 - Added config validation for invalid JSON, wrong field types, and invalid regex patterns.
 - Added a tag-triggered GitHub Release workflow that verifies and attaches the npm tarball.
 - Added npm package metadata and a release checklist for first public publishing.
