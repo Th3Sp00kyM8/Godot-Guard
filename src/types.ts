@@ -16,6 +16,7 @@ export interface GuardConfig {
     requireReturnTypes?: boolean;
     requireTypedVars?: boolean;
   };
+  ignoredPathPatterns?: string[];
   allowedMissingResourcePatterns?: string[];
 }
 

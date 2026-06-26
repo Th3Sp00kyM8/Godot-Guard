@@ -11,7 +11,7 @@ export async function loadConfig(root: string, explicitPath?: string): Promise<G
     return {};
   }
 
-  const raw = await readFile(configPath, "utf8");
+  const raw = (await readFile(configPath, "utf8")).replace(/^\uFEFF/, "");
   return JSON.parse(raw) as GuardConfig;
 }
 

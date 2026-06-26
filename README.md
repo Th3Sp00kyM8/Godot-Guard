@@ -56,6 +56,9 @@ Create `godot-guard.config.json` in your Godot project root:
     "requireReturnTypes": true,
     "requireTypedVars": false
   },
+  "ignoredPathPatterns": [
+    "^tests/"
+  ],
   "allowedMissingResourcePatterns": []
 }
 ```

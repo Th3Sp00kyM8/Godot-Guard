@@ -6,5 +6,9 @@
     "requireReturnTypes": false,
     "requireTypedVars": false
   },
+  "ignoredPathPatterns": [
+    "^tests/",
+    "^addons/"
+  ],
   "allowedMissingResourcePatterns": []
 }

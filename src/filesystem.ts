@@ -29,7 +29,7 @@ export async function walkFiles(root: string): Promise<string[]> {
       const fullPath = path.join(current, entry.name);
 
       if (entry.isDirectory()) {
-        if (!IGNORED_DIRS.has(entry.name)) {
+        if (!shouldIgnoreDirectory(entry.name)) {
           await visit(fullPath);
         }
         continue;
@@ -46,6 +46,10 @@ export async function walkFiles(root: string): Promise<string[]> {
   }
 
   return files;
+}
+
+function shouldIgnoreDirectory(name: string): boolean {
+  return IGNORED_DIRS.has(name) || name.startsWith(".");
 }
 
 export function toRelative(root: string, filePath: string): string {

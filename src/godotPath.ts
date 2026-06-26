@@ -6,9 +6,29 @@ export function resPathToFilePath(root: string, resPath: string): string {
 }
 
 export function normalizeResourcePath(raw: string): string {
-  return raw.replace(/[)"'\],]+$/g, "");
+  return raw.trim().replace(/[)"'`,;.\]]+$/g, "");
 }
 
 export function isGodotResourcePath(value: string): boolean {
   return value.startsWith("res://");
+}
+
+export function isConcreteResourcePath(resPath: string): boolean {
+  if (!resPath.startsWith("res://")) {
+    return false;
+  }
+
+  if (resPath.includes("%") || resPath.includes("<") || resPath.includes(">")) {
+    return false;
+  }
+
+  if (resPath.includes("...") || resPath.includes("*")) {
+    return false;
+  }
+
+  if (resPath.startsWith("res://.godot/")) {
+    return false;
+  }
+
+  return true;
 }

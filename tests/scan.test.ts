@@ -19,7 +19,7 @@ describe("scan", () => {
     const result = await scan({
       root: path.join(fixtures, "broken"),
       command: "scan",
-      configPath: undefined
+      configPath: "__no_config__.json"
     });
 
     expect(result.issues.map((issue) => issue.code)).toEqual(expect.arrayContaining([
@@ -27,5 +27,15 @@ describe("scan", () => {
       "project.autoload_script_missing",
       "resources.missing_res_path"
     ]));
+  });
+
+  it("supports ignoring paths by config pattern", async () => {
+    const result = await scan({
+      root: path.join(fixtures, "broken"),
+      command: "resources",
+      configPath: "godot-guard.config.json"
+    });
+
+    expect(result.issues).toEqual([]);
   });
 });

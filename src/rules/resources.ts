@@ -1,15 +1,16 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { pathExists, toRelative, walkFiles } from "../filesystem.js";
-import { normalizeResourcePath, resPathToFilePath } from "../godotPath.js";
+import { isConcreteResourcePath, normalizeResourcePath, resPathToFilePath } from "../godotPath.js";
 import type { GuardConfig, Issue } from "../types.js";
 
-const RESOURCE_EXTENSIONS = new Set([".tscn", ".tres", ".gd", ".gdshader", ".import"]);
-const RES_PATH_PATTERN = /res:\/\/[^"'\s\])},]+/g;
+const RESOURCE_EXTENSIONS = new Set([".tscn", ".tres", ".gd", ".gdshader"]);
+const QUOTED_RES_PATH_PATTERN = /(["'])(res:\/\/.*?)\1/g;
 
 export async function checkResourceReferences(root: string, config: GuardConfig): Promise<Issue[]> {
   const issues: Issue[] = [];
   const files = await walkFiles(root);
+  const ignoredPathPatterns = (config.ignoredPathPatterns ?? []).map((pattern) => new RegExp(pattern));
   const allowPatterns = (config.allowedMissingResourcePatterns ?? []).map((pattern) => new RegExp(pattern));
 
   for (const file of files) {
@@ -18,10 +19,18 @@ export async function checkResourceReferences(root: string, config: GuardConfig)
     }
 
     const relative = toRelative(root, file);
+    if (ignoredPathPatterns.some((pattern) => pattern.test(relative))) {
+      continue;
+    }
+
     const raw = await readFile(file, "utf8");
 
-    for (const match of raw.matchAll(RES_PATH_PATTERN)) {
-      const resPath = normalizeResourcePath(match[0]);
+    for (const match of raw.matchAll(QUOTED_RES_PATH_PATTERN)) {
+      const resPath = normalizeResourcePath(match[2] ?? "");
+      if (!isConcreteResourcePath(resPath)) {
+        continue;
+      }
+
       if (allowPatterns.some((pattern) => pattern.test(resPath))) {
         continue;
       }
