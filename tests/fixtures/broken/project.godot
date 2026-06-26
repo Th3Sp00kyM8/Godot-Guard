@@ -1,0 +1,8 @@
+[application]
+
+config/name="Broken Fixture"
+run/main_scene="res://scenes/Missing.tscn"
+
+[autoload]
+
+SaveSystem="*res://scripts/MissingSaveSystem.gd"

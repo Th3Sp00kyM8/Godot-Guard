@@ -1,0 +1,10 @@
+{
+  "$schema": "https://example.com/godot-guard.schema.json",
+  "requiredAutoloads": [],
+  "requiredInputActions": [],
+  "gdscript": {
+    "requireReturnTypes": false,
+    "requireTypedVars": false
+  },
+  "allowedMissingResourcePatterns": []
+}

@@ -1,0 +1,17 @@
+; Engine configuration file.
+
+[application]
+
+config/name="Healthy Fixture"
+run/main_scene="res://scenes/Main.tscn"
+
+[autoload]
+
+SaveSystem="*res://scripts/SaveSystem.gd"
+
+[input]
+
+jump={
+"deadzone": 0.5,
+"events": []
+}
