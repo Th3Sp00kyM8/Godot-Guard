@@ -3,7 +3,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
 import path from "node:path";
 import { parseFailOn, shouldFail, type FailOn } from "./failure.js";
-import { initConfig } from "./init.js";
+import { initConfig, type InitProfile } from "./init.js";
 import { formatJson, formatMarkdown, formatSarif, formatText } from "./reporters.js";
 import { scan } from "./scan.js";
 import type { ScanOptions } from "./types.js";
@@ -27,7 +27,7 @@ async function main(): Promise<void> {
   }
 
   if (parsed.command === "init") {
-    const result = await initConfig(parsed.root, parsed.force);
+    const result = await initConfig(parsed.root, parsed.force, parsed.profile);
     if (result.created) {
       console.log(`Godot Guard: created ${result.configPath}`);
     } else {
@@ -58,6 +58,7 @@ interface ParsedArgs {
   format: "text" | "json" | "markdown" | "sarif";
   failOn: FailOn;
   outputPath?: string;
+  profile: InitProfile;
   force: boolean;
   help: boolean;
   summaryOnly: boolean;
@@ -70,6 +71,7 @@ function parseArgs(args: string[]): ParsedArgs {
   let format: ParsedArgs["format"] = "text";
   let failOn: FailOn = "error";
   let outputPath: string | undefined;
+  let profile: InitProfile = "default";
   let configPath: string | undefined;
   let force = false;
   let help = false;
@@ -136,6 +138,16 @@ function parseArgs(args: string[]): ParsedArgs {
       continue;
     }
 
+    if (arg === "--profile") {
+      const value = args[index + 1];
+      if (value !== "default" && value !== "mature-project") {
+        throw new Error("--profile must be `default` or `mature-project`.");
+      }
+      profile = value;
+      index += 1;
+      continue;
+    }
+
     positionals.push(arg);
   }
 
@@ -154,6 +166,7 @@ function parseArgs(args: string[]): ParsedArgs {
       format,
       failOn,
       outputPath,
+      profile,
       force,
       help,
       summaryOnly,
@@ -168,6 +181,7 @@ function parseArgs(args: string[]): ParsedArgs {
     format,
     failOn,
     outputPath,
+    profile,
     force,
     help,
     summaryOnly,
@@ -213,6 +227,8 @@ Options:
   --summary                     Show only counts and categories.
   --fail-on error|warn|none     Exit with code 1 on this severity threshold. Defaults to error.
   --output <path>               Write report output to a file instead of stdout.
+  --profile default|mature-project
+                                Config profile for init. Defaults to default.
   --config <path>               Config path relative to the project root.
   --force                       Overwrite config when using init.
   -v, --version                 Show the package version.

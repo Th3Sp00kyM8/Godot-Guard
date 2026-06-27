@@ -72,6 +72,7 @@ godot-guard --version
 
 ```bash
 godot-guard init .
+godot-guard init . --profile mature-project
 godot-guard scan .
 godot-guard project .
 godot-guard resources .
@@ -126,6 +127,7 @@ For a copyable GitHub Actions workflow and rollout advice, see:
 - `examples/github-actions/godot-guard.yml`
 - `examples/github-actions/godot-guard-sarif.yml`
 - `examples/configs/low-noise.json`
+- `examples/configs/mature-project.json`
 - `examples/configs/strict.json`
 
 ## Package Verification

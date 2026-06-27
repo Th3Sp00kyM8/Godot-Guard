@@ -32,6 +32,10 @@ export async function checkResourceReferences(root: string, config: GuardConfig)
         continue;
       }
 
+      if (reference.kind === "path_prefix" && !hasFileExtension(resPath)) {
+        continue;
+      }
+
       if (allowPatterns.some((pattern) => pattern.test(resPath))) {
         continue;
       }

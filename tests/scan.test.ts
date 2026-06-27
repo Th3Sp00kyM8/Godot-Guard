@@ -66,4 +66,14 @@ describe("scan", () => {
       "config.invalid_field_type"
     ]);
   });
+
+  it("does not warn on GDScript constants that are likely path prefixes", async () => {
+    const result = await scan({
+      root: path.join(fixtures, "prefix-constants"),
+      command: "resources",
+      configPath: undefined
+    });
+
+    expect(result.issues.map((issue) => issue.code)).toEqual(["resources.missing_res_path"]);
+  });
 });

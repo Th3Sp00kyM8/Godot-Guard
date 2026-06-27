@@ -1,0 +1,4 @@
+[application]
+
+config/name="Prefix Constants"
+run/main_scene="res://scenes/Main.tscn"
