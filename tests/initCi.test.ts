@@ -20,6 +20,7 @@ describe("initCiWorkflow", () => {
 
     expect(result.created).toBe(true);
     expect(result.usedBaseline).toBe(false);
+    expect(result.prComment).toBe(false);
     expect(result.workflowPath).toBe(path.join(root, ".github", "workflows", "godot-guard.yml"));
     expect(raw).toContain("name: Godot Guard");
     expect(raw).toContain("run: npx godot-guard scan . --summary");
@@ -57,6 +58,32 @@ describe("initCiWorkflow", () => {
 
     expect(result.usedBaseline).toBe(true);
     expect(raw).toContain("run: npx godot-guard scan . --summary --baseline godot-guard.baseline.json");
+  });
+
+  it("creates a pull request comment workflow", async () => {
+    const root = await createTempRoot();
+
+    const result = await initCiWorkflow(root, false, { prComment: true });
+    const raw = await readFile(result.workflowPath, "utf8");
+
+    expect(result.created).toBe(true);
+    expect(result.prComment).toBe(true);
+    expect(raw).toContain("name: Godot Guard PR Comment");
+    expect(raw).toContain("pull-requests: write");
+    expect(raw).toContain("run: npx godot-guard scan . --format github --fail-on none --output godot-guard-comment.md");
+    expect(raw).toContain("run: npx godot-guard scan .");
+  });
+
+  it("uses a baseline in pull request comment workflows when present", async () => {
+    const root = await createTempRoot();
+    await writeFile(path.join(root, "godot-guard.baseline.json"), "{}\n", "utf8");
+
+    const result = await initCiWorkflow(root, false, { prComment: true });
+    const raw = await readFile(result.workflowPath, "utf8");
+
+    expect(result.usedBaseline).toBe(true);
+    expect(raw).toContain("run: npx godot-guard scan . --format github --fail-on none --baseline godot-guard.baseline.json --output godot-guard-comment.md");
+    expect(raw).toContain("run: npx godot-guard scan . --baseline godot-guard.baseline.json");
   });
 });
 

@@ -41,9 +41,12 @@ async function main(): Promise<void> {
   }
 
   if (parsed.command === "init-ci") {
-    const result = await initCiWorkflow(parsed.root, parsed.force);
+    const result = await initCiWorkflow(parsed.root, parsed.force, { prComment: parsed.prComment });
     if (result.created) {
       console.log(`Godot Guard: created ${result.workflowPath}`);
+      if (result.prComment) {
+        console.log("Godot Guard: workflow will post pull request comments");
+      }
       if (result.usedBaseline) {
         console.log(`Godot Guard: workflow will use ${DEFAULT_BASELINE_FILE}`);
       }
@@ -96,6 +99,7 @@ interface ParsedArgs {
   outputPath?: string;
   baselinePath?: string;
   explainCode?: string;
+  prComment: boolean;
   profile: InitProfile;
   force: boolean;
   help: boolean;
@@ -113,6 +117,7 @@ function parseArgs(args: string[]): ParsedArgs {
   let profile: InitProfile = "default";
   let configPath: string | undefined;
   let force = false;
+  let prComment = false;
   let help = false;
   let summaryOnly = false;
   let version = false;
@@ -138,6 +143,11 @@ function parseArgs(args: string[]): ParsedArgs {
 
     if (arg === "--summary") {
       summaryOnly = true;
+      continue;
+    }
+
+    if (arg === "--pr-comment") {
+      prComment = true;
       continue;
     }
 
@@ -217,6 +227,7 @@ function parseArgs(args: string[]): ParsedArgs {
       outputPath,
       baselinePath,
       explainCode: command === "explain" ? positionals[1] : undefined,
+      prComment,
       profile,
       force,
       help,
@@ -234,6 +245,7 @@ function parseArgs(args: string[]): ParsedArgs {
     outputPath,
     baselinePath,
     explainCode: undefined,
+    prComment,
     profile,
     force,
     help,
@@ -288,6 +300,7 @@ Options:
   --fail-on error|warn|none     Exit with code 1 on this severity threshold. Defaults to error.
   --output <path>               Write report output to a file instead of stdout.
   --baseline <path>             Write or apply a baseline file. Defaults to ${DEFAULT_BASELINE_FILE} for baseline.
+  --pr-comment                  Generate a pull request comment workflow when using init-ci.
   --profile default|mature-project
                                 Config profile for init. Defaults to default.
   --config <path>               Config path relative to the project root.
