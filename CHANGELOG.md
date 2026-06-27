@@ -4,6 +4,8 @@ All notable changes to Godot Guard will be documented in this file.
 
 ## Unreleased
 
+## 0.1.1 - 2026-06-27
+
 - Updated README install guidance and project badges after the first npm publish.
 - Added `godot-guard explain [issue-code]` for plain-language issue help.
 - Added `godot-guard baseline` and `--baseline <path>` so established projects can ignore known issues while still catching new ones.
