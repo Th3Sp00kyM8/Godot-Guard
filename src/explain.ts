@@ -75,6 +75,15 @@ const ISSUE_EXPLANATIONS: IssueExplanation[] = [
     fix: "Run Godot Guard from the Godot project root or pass the correct project path."
   },
   {
+    code: "project.nested_project_found",
+    severity: "error",
+    category: "project",
+    title: "Nested Godot project found",
+    meaning: "The scan root does not contain `project.godot`, but one or more child folders do.",
+    impact: "Running from the outer folder can create misleading missing-resource errors because `res://` paths resolve from the wrong root.",
+    fix: "Run Godot Guard from the nested project root named in the issue suggestion."
+  },
+  {
     code: "project.main_scene_missing",
     severity: "error",
     category: "project",

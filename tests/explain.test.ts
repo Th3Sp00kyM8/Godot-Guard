@@ -12,6 +12,7 @@ const expectedCodes = [
   "project.main_scene_missing",
   "project.main_scene_missing_setting",
   "project.missing",
+  "project.nested_project_found",
   "project.required_autoload_missing",
   "project.required_input_action_missing",
   "resources.missing_res_directory",

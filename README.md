@@ -165,3 +165,11 @@ For the full release checklist, see `docs/release.md`.
 ## Scope
 
 Godot Guard is not a replacement for Godot's editor, test runner, or GDScript linters. It is a project-level health checker focused on scene/resource/project drift, especially in AI-assisted workflows.
+
+If a repository contains the Godot project in a nested folder, run Godot Guard against that folder:
+
+```bash
+godot-guard scan game
+```
+
+When run from the outer repository folder, Godot Guard reports the nested project root instead of producing misleading `res://` path errors.
