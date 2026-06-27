@@ -4,6 +4,8 @@ All notable changes to Godot Guard will be documented in this file.
 
 ## Unreleased
 
+## 0.1.3 - 2026-06-27
+
 - Added `--format github` for compact pull request and issue comment summaries.
 - Added a copyable GitHub Actions workflow that posts Godot Guard results as a pull request comment.
 - Added field-test notes from real open-source Godot repositories.
