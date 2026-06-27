@@ -5,13 +5,14 @@ import path from "node:path";
 import { DEFAULT_BASELINE_FILE, writeBaseline } from "./baseline.js";
 import { formatExplainOutput, getIssueExplanation } from "./explain.js";
 import { parseFailOn, shouldFail, type FailOn } from "./failure.js";
+import { initCiWorkflow } from "./initCi.js";
 import { initConfig, type InitProfile } from "./init.js";
 import { formatJson, formatMarkdown, formatSarif, formatText } from "./reporters.js";
 import { scan } from "./scan.js";
 import type { ScanOptions } from "./types.js";
 
 const SCAN_COMMANDS = new Set(["scan", "project", "resources", "scripts"]);
-const VALID_COMMANDS = new Set([...SCAN_COMMANDS, "init", "baseline", "explain"]);
+const VALID_COMMANDS = new Set([...SCAN_COMMANDS, "init", "init-ci", "baseline", "explain"]);
 const require = createRequire(import.meta.url);
 const packageJson = require("../package.json") as { version: string };
 
@@ -34,6 +35,20 @@ async function main(): Promise<void> {
       console.log(`Godot Guard: created ${result.configPath}`);
     } else {
       console.log(`Godot Guard: config already exists at ${result.configPath}`);
+      console.log("Use --force to overwrite it.");
+    }
+    return;
+  }
+
+  if (parsed.command === "init-ci") {
+    const result = await initCiWorkflow(parsed.root, parsed.force);
+    if (result.created) {
+      console.log(`Godot Guard: created ${result.workflowPath}`);
+      if (result.usedBaseline) {
+        console.log(`Godot Guard: workflow will use ${DEFAULT_BASELINE_FILE}`);
+      }
+    } else {
+      console.log(`Godot Guard: workflow already exists at ${result.workflowPath}`);
       console.log("Use --force to overwrite it.");
     }
     return;
@@ -73,7 +88,7 @@ async function main(): Promise<void> {
 }
 
 interface ParsedArgs {
-  command: "scan" | "project" | "resources" | "scripts" | "init" | "baseline" | "explain";
+  command: "scan" | "project" | "resources" | "scripts" | "init" | "init-ci" | "baseline" | "explain";
   root: string;
   options: ScanOptions;
   format: "text" | "json" | "markdown" | "sarif";
@@ -192,7 +207,7 @@ function parseArgs(args: string[]): ParsedArgs {
     root = positionals[0] ?? ".";
   }
 
-  if (command === "init" || command === "baseline" || command === "explain") {
+  if (command === "init" || command === "init-ci" || command === "baseline" || command === "explain") {
     return {
       command,
       root,
@@ -254,6 +269,7 @@ function printHelp(): void {
 
 Usage:
   godot-guard init [project-path]
+  godot-guard init-ci [project-path]
   godot-guard baseline [project-path]
   godot-guard explain [issue-code]
   godot-guard scan [project-path]
@@ -271,7 +287,7 @@ Options:
   --profile default|mature-project
                                 Config profile for init. Defaults to default.
   --config <path>               Config path relative to the project root.
-  --force                       Overwrite config when using init.
+  --force                       Overwrite config or workflow when using init commands.
   -v, --version                 Show the package version.
   -h, --help                    Show this help.
 `);

@@ -4,6 +4,8 @@ All notable changes to Godot Guard will be documented in this file.
 
 ## Unreleased
 
+- Added `godot-guard init-ci` to generate a starter GitHub Actions workflow.
+
 ## 0.1.1 - 2026-06-27
 
 - Updated README install guidance and project badges after the first npm publish.
