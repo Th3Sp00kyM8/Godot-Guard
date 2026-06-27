@@ -5,6 +5,7 @@ All notable changes to Godot Guard will be documented in this file.
 ## Unreleased
 
 - Updated README install guidance and project badges after the first npm publish.
+- Added `godot-guard explain [issue-code]` for plain-language issue help.
 - Added `godot-guard baseline` and `--baseline <path>` so established projects can ignore known issues while still catching new ones.
 - Added `init --profile mature-project` for lower-noise established project configs.
 - Suppressed missing-resource warnings for GDScript constants that look like path directory or prefix values.

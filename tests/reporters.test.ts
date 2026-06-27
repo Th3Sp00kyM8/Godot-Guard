@@ -35,6 +35,8 @@ describe("reporters", () => {
     expect(sarif.version).toBe("2.1.0");
     expect(sarif.runs[0].tool.driver.name).toBe("Godot Guard");
     expect(sarif.runs[0].tool.driver.rules[0].id).toBe("resources.missing_res_path");
+    expect(sarif.runs[0].tool.driver.rules[0].shortDescription.text).toBe("Resource path is missing");
+    expect(sarif.runs[0].tool.driver.rules[0].help.text).toContain("Restore the missing file");
     expect(sarif.runs[0].results[0]).toMatchObject({
       ruleId: "resources.missing_res_path",
       level: "error",

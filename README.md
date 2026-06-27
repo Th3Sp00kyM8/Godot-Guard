@@ -74,6 +74,8 @@ godot-guard --version
 godot-guard init .
 godot-guard init . --profile mature-project
 godot-guard baseline .
+godot-guard explain
+godot-guard explain resources.missing_res_path
 godot-guard scan .
 godot-guard scan . --baseline godot-guard.baseline.json
 godot-guard project .
