@@ -76,4 +76,29 @@ describe("scan", () => {
 
     expect(result.issues.map((issue) => issue.code)).toEqual(["resources.missing_res_path"]);
   });
+
+  it("reports a nested project root instead of cascading resource errors", async () => {
+    const result = await scan({
+      root: path.join(fixtures, "nested-project"),
+      command: "scan",
+      configPath: undefined
+    });
+
+    expect(result.issues).toEqual([expect.objectContaining({
+      code: "project.nested_project_found",
+      severity: "error",
+      file: "game/project.godot"
+    })]);
+    expect(result.issues[0].suggestion).toContain("godot-guard scan game");
+  });
+
+  it("passes when scanning the nested project root directly", async () => {
+    const result = await scan({
+      root: path.join(fixtures, "nested-project", "game"),
+      command: "scan",
+      configPath: undefined
+    });
+
+    expect(result.issues).toEqual([]);
+  });
 });

@@ -5,6 +5,7 @@ All notable changes to Godot Guard will be documented in this file.
 ## Unreleased
 
 - Added `godot-guard init-ci` to generate a starter GitHub Actions workflow.
+- Added nested Godot project detection to avoid misleading scan results when running from an outer repository folder.
 
 ## 0.1.1 - 2026-06-27
 
