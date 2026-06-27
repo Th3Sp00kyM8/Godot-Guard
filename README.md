@@ -1,5 +1,9 @@
 # Godot Guard
 
+[![npm version](https://img.shields.io/npm/v/godot-guard.svg)](https://www.npmjs.com/package/godot-guard)
+[![CI](https://github.com/Th3Sp00kyM8/Godot-Guard/actions/workflows/ci.yml/badge.svg)](https://github.com/Th3Sp00kyM8/Godot-Guard/actions/workflows/ci.yml)
+[![GitHub Release](https://img.shields.io/github/v/release/Th3Sp00kyM8/Godot-Guard)](https://github.com/Th3Sp00kyM8/Godot-Guard/releases)
+
 Godot Guard is a local project health checker for Godot games, built for AI-assisted and vibe-coded workflows. It scans scenes, resources, scripts, and project settings to catch broken references, missing assets, risky drift, and common agent-generated mistakes before they reach your game.
 
 ## Why
@@ -32,30 +36,30 @@ Godot Guard is built for teams and solo developers using AI assistants to move q
 
 ## Install
 
-After the package is published to npm:
-
-```bash
-npm install -g godot-guard
-```
-
-Or run without installing:
+Run without installing:
 
 ```bash
 npx godot-guard scan .
 ```
 
-During early development, from a local checkout:
+Or install globally from npm:
 
 ```bash
-npm install
-npm run build
-npm link
+npm install -g godot-guard
 ```
 
 Then run it inside a Godot project:
 
 ```bash
 godot-guard scan .
+```
+
+From a source checkout:
+
+```bash
+npm install
+npm run build
+npm link
 ```
 
 Check the installed version:

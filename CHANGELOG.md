@@ -4,7 +4,7 @@ All notable changes to Godot Guard will be documented in this file.
 
 ## Unreleased
 
-No unreleased changes.
+- Updated README install guidance and project badges after the first npm publish.
 
 ## 0.1.0 - 2026-06-26
 
