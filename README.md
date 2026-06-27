@@ -73,6 +73,7 @@ godot-guard --version
 ```bash
 godot-guard init .
 godot-guard init . --profile mature-project
+godot-guard init-ci .
 godot-guard baseline .
 godot-guard explain
 godot-guard explain resources.missing_res_path
@@ -117,6 +118,12 @@ Godot Guard exits with code `1` when it finds an error-level issue, so it can be
 
 ```bash
 godot-guard scan .
+```
+
+Create a starter GitHub Actions workflow:
+
+```bash
+godot-guard init-ci .
 ```
 
 Use `--fail-on warn` for stricter CI, or `--fail-on none` when you want a report without failing the job.
