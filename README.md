@@ -84,6 +84,7 @@ godot-guard resources .
 godot-guard scripts .
 godot-guard scan . --format json
 godot-guard scan . --format markdown
+godot-guard scan . --format github
 godot-guard scan . --format markdown > godot-guard-report.md
 godot-guard scan . --format sarif > godot-guard.sarif
 godot-guard scan . --format sarif --output godot-guard.sarif
@@ -128,6 +129,7 @@ godot-guard init-ci .
 
 Use `--fail-on warn` for stricter CI, or `--fail-on none` when you want a report without failing the job.
 Use `--format sarif` when uploading results to GitHub code scanning.
+Use `--format github` for a compact Markdown summary suitable for a pull request or issue comment.
 Use `--output <path>` to write reports directly from the CLI.
 
 For established projects with known issues, create a baseline and commit it:

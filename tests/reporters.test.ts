@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatMarkdown, formatSarif, formatText } from "../src/reporters.js";
+import { formatGithub, formatMarkdown, formatSarif, formatText } from "../src/reporters.js";
 import type { ScanResult } from "../src/types.js";
 
 const result: ScanResult = {
@@ -27,6 +27,27 @@ describe("reporters", () => {
     expect(markdown).toContain("# Godot Guard Report");
     expect(markdown).toContain("## Issues");
     expect(markdown).toContain("`scenes/Main.tscn:3`");
+  });
+
+  it("formats GitHub comment reports", () => {
+    const markdown = formatGithub(result);
+
+    expect(markdown).toContain("## Godot Guard");
+    expect(markdown).toContain("Found **1** issue(s).");
+    expect(markdown).toContain("| Severity | Code | Location | Message |");
+    expect(markdown).toContain("| error | `resources.missing_res_path` | `scenes/Main.tscn:3` | Missing resource reference: res://missing.gd |");
+  });
+
+  it("formats clean GitHub comment reports", () => {
+    expect(formatGithub({ root: "/game", issues: [] })).toBe("## Godot Guard\n\nNo issues found.");
+  });
+
+  it("supports summary-only GitHub comment reports", () => {
+    const markdown = formatGithub(result, { summaryOnly: true });
+
+    expect(markdown).toContain("Found **1** issue(s).");
+    expect(markdown).toContain("Codes: resources.missing_res_path=1");
+    expect(markdown).not.toContain("| Severity | Code | Location | Message |");
   });
 
   it("formats SARIF reports", () => {

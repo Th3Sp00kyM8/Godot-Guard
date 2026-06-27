@@ -7,7 +7,7 @@ import { formatExplainOutput, getIssueExplanation } from "./explain.js";
 import { parseFailOn, shouldFail, type FailOn } from "./failure.js";
 import { initCiWorkflow } from "./initCi.js";
 import { initConfig, type InitProfile } from "./init.js";
-import { formatJson, formatMarkdown, formatSarif, formatText } from "./reporters.js";
+import { formatGithub, formatJson, formatMarkdown, formatSarif, formatText } from "./reporters.js";
 import { scan } from "./scan.js";
 import type { ScanOptions } from "./types.js";
 
@@ -91,7 +91,7 @@ interface ParsedArgs {
   command: "scan" | "project" | "resources" | "scripts" | "init" | "init-ci" | "baseline" | "explain";
   root: string;
   options: ScanOptions;
-  format: "text" | "json" | "markdown" | "sarif";
+  format: "text" | "json" | "markdown" | "github" | "sarif";
   failOn: FailOn;
   outputPath?: string;
   baselinePath?: string;
@@ -143,8 +143,8 @@ function parseArgs(args: string[]): ParsedArgs {
 
     if (arg === "--format") {
       const value = args[index + 1];
-      if (value !== "text" && value !== "json" && value !== "markdown" && value !== "sarif") {
-        throw new Error("--format must be `text`, `json`, `markdown`, or `sarif`.");
+      if (value !== "text" && value !== "json" && value !== "markdown" && value !== "github" && value !== "sarif") {
+        throw new Error("--format must be `text`, `json`, `markdown`, `github`, or `sarif`.");
       }
       format = value;
       index += 1;
@@ -251,6 +251,10 @@ function formatResult(result: Awaited<ReturnType<typeof scan>>, parsed: ParsedAr
     return formatMarkdown(result, { summaryOnly: parsed.summaryOnly });
   }
 
+  if (parsed.format === "github") {
+    return formatGithub(result, { summaryOnly: parsed.summaryOnly });
+  }
+
   if (parsed.format === "sarif") {
     return formatSarif(result);
   }
@@ -278,7 +282,7 @@ Usage:
   godot-guard scripts [project-path]
 
 Options:
-  --format text|json|markdown|sarif
+  --format text|json|markdown|github|sarif
                                 Output format. Defaults to text.
   --summary                     Show only counts and categories.
   --fail-on error|warn|none     Exit with code 1 on this severity threshold. Defaults to error.
