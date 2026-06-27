@@ -142,6 +142,7 @@ Baseline scans ignore the recorded issues and still report new problems.
 For a copyable GitHub Actions workflow and rollout advice, see:
 
 - `docs/adoption.md`
+- `docs/field-tests.md`
 - `examples/godot-projects/broken-ai-pass`
 - `examples/reports/broken-ai-pass.md`
 - `examples/github-actions/godot-guard.yml`

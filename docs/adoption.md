@@ -2,6 +2,8 @@
 
 Use this guide to introduce Godot Guard to an existing Godot project without turning the first run into a noisy cleanup project.
 
+For examples from real open-source Godot repositories, see `docs/field-tests.md`.
+
 ## 1. Start With A Summary
 
 Run a summary first:
