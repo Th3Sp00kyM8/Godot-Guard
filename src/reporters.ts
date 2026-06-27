@@ -1,3 +1,4 @@
+import { getIssueExplanation } from "./explain.js";
 import type { ScanResult } from "./types.js";
 
 export interface ReporterOptions {
@@ -72,13 +73,22 @@ export function formatJson(result: ScanResult): string {
 export function formatSarif(result: ScanResult): string {
   const rules = [...new Set(result.issues.map((issue) => issue.code))]
     .sort()
-    .map((code) => ({
-      id: code,
-      name: code,
-      shortDescription: {
-        text: code
-      }
-    }));
+    .map((code) => {
+      const explanation = getIssueExplanation(code);
+      return {
+        id: code,
+        name: code,
+        shortDescription: {
+          text: explanation?.title ?? code
+        },
+        fullDescription: {
+          text: explanation ? `${explanation.meaning} ${explanation.impact}` : code
+        },
+        help: {
+          text: explanation?.fix ?? code
+        }
+      };
+    });
 
   const sarif = {
     version: "2.1.0",

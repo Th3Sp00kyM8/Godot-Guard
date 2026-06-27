@@ -3,6 +3,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
 import path from "node:path";
 import { DEFAULT_BASELINE_FILE, writeBaseline } from "./baseline.js";
+import { formatExplainOutput, getIssueExplanation } from "./explain.js";
 import { parseFailOn, shouldFail, type FailOn } from "./failure.js";
 import { initConfig, type InitProfile } from "./init.js";
 import { formatJson, formatMarkdown, formatSarif, formatText } from "./reporters.js";
@@ -10,7 +11,7 @@ import { scan } from "./scan.js";
 import type { ScanOptions } from "./types.js";
 
 const SCAN_COMMANDS = new Set(["scan", "project", "resources", "scripts"]);
-const VALID_COMMANDS = new Set([...SCAN_COMMANDS, "init", "baseline"]);
+const VALID_COMMANDS = new Set([...SCAN_COMMANDS, "init", "baseline", "explain"]);
 const require = createRequire(import.meta.url);
 const packageJson = require("../package.json") as { version: string };
 
@@ -49,6 +50,14 @@ async function main(): Promise<void> {
     return;
   }
 
+  if (parsed.command === "explain") {
+    console.log(formatExplainOutput(parsed.explainCode));
+    if (parsed.explainCode && !getIssueExplanation(parsed.explainCode)) {
+      process.exitCode = 1;
+    }
+    return;
+  }
+
   const result = await scan(parsed.options);
   const output = formatResult(result, parsed);
 
@@ -64,13 +73,14 @@ async function main(): Promise<void> {
 }
 
 interface ParsedArgs {
-  command: "scan" | "project" | "resources" | "scripts" | "init" | "baseline";
+  command: "scan" | "project" | "resources" | "scripts" | "init" | "baseline" | "explain";
   root: string;
   options: ScanOptions;
   format: "text" | "json" | "markdown" | "sarif";
   failOn: FailOn;
   outputPath?: string;
   baselinePath?: string;
+  explainCode?: string;
   profile: InitProfile;
   force: boolean;
   help: boolean;
@@ -177,12 +187,12 @@ function parseArgs(args: string[]): ParsedArgs {
 
   if (positionals[0] && VALID_COMMANDS.has(positionals[0])) {
     command = positionals[0] as ParsedArgs["command"];
-    root = positionals[1] ?? ".";
+    root = command === "explain" ? "." : positionals[1] ?? ".";
   } else {
     root = positionals[0] ?? ".";
   }
 
-  if (command === "init" || command === "baseline") {
+  if (command === "init" || command === "baseline" || command === "explain") {
     return {
       command,
       root,
@@ -191,6 +201,7 @@ function parseArgs(args: string[]): ParsedArgs {
       failOn,
       outputPath,
       baselinePath,
+      explainCode: command === "explain" ? positionals[1] : undefined,
       profile,
       force,
       help,
@@ -207,6 +218,7 @@ function parseArgs(args: string[]): ParsedArgs {
     failOn,
     outputPath,
     baselinePath,
+    explainCode: undefined,
     profile,
     force,
     help,
@@ -243,6 +255,7 @@ function printHelp(): void {
 Usage:
   godot-guard init [project-path]
   godot-guard baseline [project-path]
+  godot-guard explain [issue-code]
   godot-guard scan [project-path]
   godot-guard project [project-path]
   godot-guard resources [project-path]
