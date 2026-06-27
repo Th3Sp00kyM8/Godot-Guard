@@ -1,0 +1,45 @@
+name: Godot Guard PR Comment
+
+on:
+  pull_request:
+
+jobs:
+  godot-guard:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Run Godot Guard
+        run: npx godot-guard scan . --format github --fail-on none --output godot-guard-comment.md
+      - name: Upsert PR comment
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          marker="<!-- godot-guard-report -->"
+          body_file="godot-guard-comment.md"
+          comment_body="$(mktemp)"
+          {
+            echo "$marker"
+            cat "$body_file"
+          } > "$comment_body"
+
+          comment_id="$(gh api "repos/${{ github.repository }}/issues/$PR_NUMBER/comments" \
+            --jq ".[] | select(.body | contains(\"$marker\")) | .id" | head -n 1)"
+
+          if [ -n "$comment_id" ]; then
+            gh api "repos/${{ github.repository }}/issues/comments/$comment_id" \
+              --method PATCH \
+              --field body="$(cat "$comment_body")"
+          else
+            gh api "repos/${{ github.repository }}/issues/$PR_NUMBER/comments" \
+              --method POST \
+              --field body="$(cat "$comment_body")"
+          fi
+      - name: Enforce Godot Guard
+        run: npx godot-guard scan .
