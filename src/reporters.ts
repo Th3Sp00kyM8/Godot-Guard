@@ -66,6 +66,42 @@ export function formatMarkdown(result: ScanResult, options: ReporterOptions = {}
   return lines.join("\n").trimEnd();
 }
 
+export function formatGithub(result: ScanResult, options: ReporterOptions = {}): string {
+  const lines = ["## Godot Guard"];
+
+  if (result.issues.length === 0) {
+    lines.push("", "No issues found.");
+    return lines.join("\n");
+  }
+
+  lines.push("", `Found **${result.issues.length}** issue(s).`);
+  lines.push("");
+  lines.push(...formatSummaryLines(result).map((line) => `- ${line}`));
+
+  if (options.summaryOnly) {
+    return lines.join("\n");
+  }
+
+  lines.push("", "| Severity | Code | Location | Message |");
+  lines.push("| --- | --- | --- | --- |");
+
+  for (const issue of result.issues.slice(0, 20)) {
+    const location = issue.file ? `${issue.file}${issue.line ? `:${issue.line}` : ""}` : result.root;
+    lines.push([
+      issue.severity,
+      codeCell(issue.code),
+      codeCell(location),
+      escapeTableCell(issue.message)
+    ].join(" | ").replace(/^/, "| ").replace(/$/, " |"));
+  }
+
+  if (result.issues.length > 20) {
+    lines.push("", `<sub>${result.issues.length - 20} additional issue(s) omitted. Use \`--format markdown\` or \`--format json\` for the full report.</sub>`);
+  }
+
+  return lines.join("\n");
+}
+
 export function formatJson(result: ScanResult): string {
   return JSON.stringify(result, null, 2);
 }
@@ -148,6 +184,18 @@ function formatCounts(counts: Record<string, number>): string {
     .sort(([left], [right]) => left.localeCompare(right))
     .map(([key, value]) => `${key}=${value}`)
     .join(", ");
+}
+
+function codeCell(value: string): string {
+  return `\`${escapeTableCell(value)}\``;
+}
+
+function escapeTableCell(value: string): string {
+  return value
+    .replaceAll("\\", "\\\\")
+    .replaceAll("|", "\\|")
+    .replaceAll("\r", " ")
+    .replaceAll("\n", " ");
 }
 
 function sarifLevel(severity: string): "error" | "warning" | "note" {
