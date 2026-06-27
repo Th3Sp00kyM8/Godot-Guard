@@ -13,7 +13,7 @@
     "url": "https://github.com/Th3Sp00kyM8/Godot-Guard/issues"
   },
   "bin": {
-    "godot-guard": "./dist/cli.js"
+    "godot-guard": "dist/cli.js"
   },
   "files": [
     "dist",

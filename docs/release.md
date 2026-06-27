@@ -6,6 +6,7 @@ Use this checklist when publishing a new Godot Guard release.
 
 - GitHub CLI is authenticated for `Th3Sp00kyM8/Godot-Guard`.
 - npm CLI is authenticated with an account that can publish `godot-guard`.
+- npm two-factor authentication is enabled, or publishing uses a granular npm access token with 2FA bypass enabled.
 - `main` is clean and up to date with `origin/main`.
 - `CHANGELOG.md` has a dated entry for the version being released.
 
@@ -23,6 +24,7 @@ An `E404` response means npm does not currently have a public package by that na
 
 ```bash
 npm login
+npm whoami
 npm run check
 npm publish --access public
 ```
