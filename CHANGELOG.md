@@ -4,6 +4,8 @@ All notable changes to Godot Guard will be documented in this file.
 
 ## Unreleased
 
+- Added `init-ci --pr-comment` to generate the pull request comment workflow.
+
 ## 0.1.3 - 2026-06-27
 
 - Added `--format github` for compact pull request and issue comment summaries.

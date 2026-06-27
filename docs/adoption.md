@@ -68,7 +68,13 @@ Start with summary output in early adoption. Once the project is clean, switch C
 godot-guard scan .
 ```
 
-For pull request comments, copy `examples/github-actions/godot-guard-pr-comment.yml`. It uses `--format github` to post or update a compact Godot Guard summary on each PR.
+For pull request comments, run:
+
+```bash
+godot-guard init-ci . --pr-comment
+```
+
+You can also copy `examples/github-actions/godot-guard-pr-comment.yml` manually. It uses `--format github` to post or update a compact Godot Guard summary on each PR.
 
 ## 5. Baseline Existing Noise
 
