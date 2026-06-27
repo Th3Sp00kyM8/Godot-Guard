@@ -4,6 +4,8 @@ All notable changes to Godot Guard will be documented in this file.
 
 ## Unreleased
 
+- Added field-test notes from real open-source Godot repositories.
+
 ## 0.1.2 - 2026-06-27
 
 - Added `godot-guard init-ci` to generate a starter GitHub Actions workflow.
