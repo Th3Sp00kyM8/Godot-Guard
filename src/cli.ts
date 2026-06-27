@@ -41,11 +41,14 @@ async function main(): Promise<void> {
   }
 
   if (parsed.command === "init-ci") {
-    const result = await initCiWorkflow(parsed.root, parsed.force, { prComment: parsed.prComment });
+    const result = await initCiWorkflow(parsed.root, parsed.force, { prComment: parsed.prComment, sarif: parsed.sarif });
     if (result.created) {
       console.log(`Godot Guard: created ${result.workflowPath}`);
       if (result.prComment) {
         console.log("Godot Guard: workflow will post pull request comments");
+      }
+      if (result.sarif) {
+        console.log("Godot Guard: workflow will upload SARIF to GitHub code scanning");
       }
       if (result.usedBaseline) {
         console.log(`Godot Guard: workflow will use ${DEFAULT_BASELINE_FILE}`);
@@ -100,6 +103,7 @@ interface ParsedArgs {
   baselinePath?: string;
   explainCode?: string;
   prComment: boolean;
+  sarif: boolean;
   profile: InitProfile;
   force: boolean;
   help: boolean;
@@ -118,6 +122,7 @@ function parseArgs(args: string[]): ParsedArgs {
   let configPath: string | undefined;
   let force = false;
   let prComment = false;
+  let sarif = false;
   let help = false;
   let summaryOnly = false;
   let version = false;
@@ -148,6 +153,11 @@ function parseArgs(args: string[]): ParsedArgs {
 
     if (arg === "--pr-comment") {
       prComment = true;
+      continue;
+    }
+
+    if (arg === "--sarif") {
+      sarif = true;
       continue;
     }
 
@@ -217,6 +227,10 @@ function parseArgs(args: string[]): ParsedArgs {
     root = positionals[0] ?? ".";
   }
 
+  if (command === "init-ci" && prComment && sarif) {
+    throw new Error("Use either --pr-comment or --sarif with init-ci, not both.");
+  }
+
   if (command === "init" || command === "init-ci" || command === "baseline" || command === "explain") {
     return {
       command,
@@ -228,6 +242,7 @@ function parseArgs(args: string[]): ParsedArgs {
       baselinePath,
       explainCode: command === "explain" ? positionals[1] : undefined,
       prComment,
+      sarif,
       profile,
       force,
       help,
@@ -246,6 +261,7 @@ function parseArgs(args: string[]): ParsedArgs {
     baselinePath,
     explainCode: undefined,
     prComment,
+    sarif,
     profile,
     force,
     help,
@@ -301,6 +317,7 @@ Options:
   --output <path>               Write report output to a file instead of stdout.
   --baseline <path>             Write or apply a baseline file. Defaults to ${DEFAULT_BASELINE_FILE} for baseline.
   --pr-comment                  Generate a pull request comment workflow when using init-ci.
+  --sarif                       Generate a GitHub code scanning workflow when using init-ci.
   --profile default|mature-project
                                 Config profile for init. Defaults to default.
   --config <path>               Config path relative to the project root.

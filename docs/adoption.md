@@ -76,6 +76,14 @@ godot-guard init-ci . --pr-comment
 
 You can also copy `examples/github-actions/godot-guard-pr-comment.yml` manually. It uses `--format github` to post or update a compact Godot Guard summary on each PR.
 
+For GitHub code scanning, run:
+
+```bash
+godot-guard init-ci . --sarif
+```
+
+You can also copy `examples/github-actions/godot-guard-sarif.yml` manually. It uses `--format sarif` and uploads the results through GitHub's SARIF upload action.
+
 ## 5. Baseline Existing Noise
 
 If the project has real issues you cannot fix immediately, create and commit a baseline:

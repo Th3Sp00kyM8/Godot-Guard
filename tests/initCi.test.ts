@@ -21,6 +21,7 @@ describe("initCiWorkflow", () => {
     expect(result.created).toBe(true);
     expect(result.usedBaseline).toBe(false);
     expect(result.prComment).toBe(false);
+    expect(result.sarif).toBe(false);
     expect(result.workflowPath).toBe(path.join(root, ".github", "workflows", "godot-guard.yml"));
     expect(raw).toContain("name: Godot Guard");
     expect(raw).toContain("run: npx godot-guard scan . --summary");
@@ -72,6 +73,34 @@ describe("initCiWorkflow", () => {
     expect(raw).toContain("pull-requests: write");
     expect(raw).toContain("run: npx godot-guard scan . --format github --fail-on none --output godot-guard-comment.md");
     expect(raw).toContain("run: npx godot-guard scan .");
+  });
+
+  it("creates a GitHub code scanning workflow", async () => {
+    const root = await createTempRoot();
+
+    const result = await initCiWorkflow(root, false, { sarif: true });
+    const raw = await readFile(result.workflowPath, "utf8");
+
+    expect(result.created).toBe(true);
+    expect(result.prComment).toBe(false);
+    expect(result.sarif).toBe(true);
+    expect(raw).toContain("name: Godot Guard Code Scanning");
+    expect(raw).toContain("security-events: write");
+    expect(raw).toContain("run: npx godot-guard scan . --format sarif --fail-on none --output godot-guard.sarif");
+    expect(raw).toContain("uses: github/codeql-action/upload-sarif@v3");
+    expect(raw).toContain("sarif_file: godot-guard.sarif");
+  });
+
+  it("uses a baseline in GitHub code scanning workflows when present", async () => {
+    const root = await createTempRoot();
+    await writeFile(path.join(root, "godot-guard.baseline.json"), "{}\n", "utf8");
+
+    const result = await initCiWorkflow(root, false, { sarif: true });
+    const raw = await readFile(result.workflowPath, "utf8");
+
+    expect(result.usedBaseline).toBe(true);
+    expect(result.sarif).toBe(true);
+    expect(raw).toContain("run: npx godot-guard scan . --format sarif --fail-on none --baseline godot-guard.baseline.json --output godot-guard.sarif");
   });
 
   it("uses a baseline in pull request comment workflows when present", async () => {

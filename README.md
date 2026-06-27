@@ -75,6 +75,7 @@ godot-guard init .
 godot-guard init . --profile mature-project
 godot-guard init-ci .
 godot-guard init-ci . --pr-comment
+godot-guard init-ci . --sarif
 godot-guard baseline .
 godot-guard explain
 godot-guard explain resources.missing_res_path
@@ -132,6 +133,12 @@ Create a pull request comment workflow:
 
 ```bash
 godot-guard init-ci . --pr-comment
+```
+
+Create a GitHub code scanning workflow:
+
+```bash
+godot-guard init-ci . --sarif
 ```
 
 Use `--fail-on warn` for stricter CI, or `--fail-on none` when you want a report without failing the job.
