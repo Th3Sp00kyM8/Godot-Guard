@@ -1,4 +1,5 @@
 import path from "node:path";
+import { applyBaseline } from "./baseline.js";
 import { loadConfig } from "./config.js";
 import { checkGdscript } from "./rules/gdscript.js";
 import { checkProjectSettings } from "./rules/project.js";
@@ -19,6 +20,10 @@ export async function scan(options: ScanOptions): Promise<ScanResult> {
 
   if (options.command === "scan" || options.command === "scripts") {
     issues.push(...await checkGdscript(root, config));
+  }
+
+  if (options.baselinePath) {
+    return { root, issues: await applyBaseline(root, issues, options.baselinePath) };
   }
 
   return { root, issues };

@@ -24,6 +24,7 @@ export interface ScanOptions {
   root: string;
   command: "scan" | "project" | "resources" | "scripts";
   configPath?: string;
+  baselinePath?: string;
 }
 
 export interface ScanResult {

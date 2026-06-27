@@ -2,6 +2,7 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
 import path from "node:path";
+import { DEFAULT_BASELINE_FILE, writeBaseline } from "./baseline.js";
 import { parseFailOn, shouldFail, type FailOn } from "./failure.js";
 import { initConfig, type InitProfile } from "./init.js";
 import { formatJson, formatMarkdown, formatSarif, formatText } from "./reporters.js";
@@ -9,7 +10,7 @@ import { scan } from "./scan.js";
 import type { ScanOptions } from "./types.js";
 
 const SCAN_COMMANDS = new Set(["scan", "project", "resources", "scripts"]);
-const VALID_COMMANDS = new Set([...SCAN_COMMANDS, "init"]);
+const VALID_COMMANDS = new Set([...SCAN_COMMANDS, "init", "baseline"]);
 const require = createRequire(import.meta.url);
 const packageJson = require("../package.json") as { version: string };
 
@@ -37,6 +38,17 @@ async function main(): Promise<void> {
     return;
   }
 
+  if (parsed.command === "baseline") {
+    const result = await scan({
+      root: parsed.root,
+      command: "scan",
+      configPath: parsed.options.configPath
+    });
+    const baseline = await writeBaseline(parsed.root, result.issues, parsed.baselinePath ?? DEFAULT_BASELINE_FILE);
+    console.log(`Godot Guard: wrote ${baseline.issueCount} baseline issue(s) to ${baseline.baselinePath}`);
+    return;
+  }
+
   const result = await scan(parsed.options);
   const output = formatResult(result, parsed);
 
@@ -52,12 +64,13 @@ async function main(): Promise<void> {
 }
 
 interface ParsedArgs {
-  command: "scan" | "project" | "resources" | "scripts" | "init";
+  command: "scan" | "project" | "resources" | "scripts" | "init" | "baseline";
   root: string;
   options: ScanOptions;
   format: "text" | "json" | "markdown" | "sarif";
   failOn: FailOn;
   outputPath?: string;
+  baselinePath?: string;
   profile: InitProfile;
   force: boolean;
   help: boolean;
@@ -71,6 +84,7 @@ function parseArgs(args: string[]): ParsedArgs {
   let format: ParsedArgs["format"] = "text";
   let failOn: FailOn = "error";
   let outputPath: string | undefined;
+  let baselinePath: string | undefined;
   let profile: InitProfile = "default";
   let configPath: string | undefined;
   let force = false;
@@ -138,6 +152,16 @@ function parseArgs(args: string[]): ParsedArgs {
       continue;
     }
 
+    if (arg === "--baseline") {
+      const value = args[index + 1];
+      if (!value) {
+        throw new Error("--baseline requires a path.");
+      }
+      baselinePath = value;
+      index += 1;
+      continue;
+    }
+
     if (arg === "--profile") {
       const value = args[index + 1];
       if (value !== "default" && value !== "mature-project") {
@@ -158,7 +182,7 @@ function parseArgs(args: string[]): ParsedArgs {
     root = positionals[0] ?? ".";
   }
 
-  if (command === "init") {
+  if (command === "init" || command === "baseline") {
     return {
       command,
       root,
@@ -166,6 +190,7 @@ function parseArgs(args: string[]): ParsedArgs {
       format,
       failOn,
       outputPath,
+      baselinePath,
       profile,
       force,
       help,
@@ -177,10 +202,11 @@ function parseArgs(args: string[]): ParsedArgs {
   return {
     command,
     root,
-    options: { root, command: command as ScanOptions["command"], configPath },
+    options: { root, command: command as ScanOptions["command"], configPath, baselinePath },
     format,
     failOn,
     outputPath,
+    baselinePath,
     profile,
     force,
     help,
@@ -216,6 +242,7 @@ function printHelp(): void {
 
 Usage:
   godot-guard init [project-path]
+  godot-guard baseline [project-path]
   godot-guard scan [project-path]
   godot-guard project [project-path]
   godot-guard resources [project-path]
@@ -227,6 +254,7 @@ Options:
   --summary                     Show only counts and categories.
   --fail-on error|warn|none     Exit with code 1 on this severity threshold. Defaults to error.
   --output <path>               Write report output to a file instead of stdout.
+  --baseline <path>             Write or apply a baseline file. Defaults to ${DEFAULT_BASELINE_FILE} for baseline.
   --profile default|mature-project
                                 Config profile for init. Defaults to default.
   --config <path>               Config path relative to the project root.
