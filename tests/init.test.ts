@@ -32,4 +32,20 @@ describe("initConfig", () => {
 
     expect(result.created).toBe(false);
   });
+
+  it("creates a mature-project profile config", async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), "godot-guard-init-"));
+    tempDirs.push(root);
+
+    const result = await initConfig(root, false, "mature-project");
+    const raw = await readFile(result.configPath, "utf8");
+    const config = JSON.parse(raw);
+
+    expect(config.ignoredPathPatterns).toEqual([
+      "^tests/",
+      "^addons/",
+      "^tools/",
+      "^third_party/"
+    ]);
+  });
 });

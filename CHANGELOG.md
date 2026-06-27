@@ -5,6 +5,8 @@ All notable changes to Godot Guard will be documented in this file.
 ## Unreleased
 
 - Updated README install guidance and project badges after the first npm publish.
+- Added `init --profile mature-project` for lower-noise established project configs.
+- Suppressed missing-resource warnings for GDScript constants that look like path directory or prefix values.
 
 ## 0.1.0 - 2026-06-26
 

@@ -19,8 +19,26 @@ note = "res://docs/not-a-resource.txt"
   it("extracts quoted paths from GDScript files", () => {
     const raw = `const MAIN := "res://scenes/Main.tscn"`;
 
-    expect(extractResourcePathReferences(raw, ".gd").map((reference) => reference.resPath)).toEqual([
-      "res://scenes/Main.tscn"
+    expect(extractResourcePathReferences(raw, ".gd")).toMatchObject([{
+      resPath: "res://scenes/Main.tscn",
+      kind: "resource"
+    }]);
+  });
+
+  it("marks GDScript path prefix constants separately", () => {
+    const raw = `
+const EMBLEM_DIR: String = "res://assets/emblems"
+const BLOC_CREST_PREFIX: String = "res://assets/blocs/emblems/emblem_"
+const BROKEN := "res://assets/missing.png"
+`;
+
+    expect(extractResourcePathReferences(raw, ".gd").map((reference) => ({
+      resPath: reference.resPath,
+      kind: reference.kind
+    }))).toEqual([
+      { resPath: "res://assets/emblems", kind: "path_prefix" },
+      { resPath: "res://assets/blocs/emblems/emblem_", kind: "path_prefix" },
+      { resPath: "res://assets/missing.png", kind: "resource" }
     ]);
   });
 });
