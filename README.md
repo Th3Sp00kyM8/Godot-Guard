@@ -148,6 +148,7 @@ For a copyable GitHub Actions workflow and rollout advice, see:
 - `examples/godot-projects/broken-ai-pass`
 - `examples/reports/broken-ai-pass.md`
 - `examples/github-actions/godot-guard.yml`
+- `examples/github-actions/godot-guard-pr-comment.yml`
 - `examples/github-actions/godot-guard-sarif.yml`
 - `examples/configs/low-noise.json`
 - `examples/configs/mature-project.json`
