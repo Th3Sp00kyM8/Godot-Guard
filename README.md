@@ -73,7 +73,9 @@ godot-guard --version
 ```bash
 godot-guard init .
 godot-guard init . --profile mature-project
+godot-guard baseline .
 godot-guard scan .
+godot-guard scan . --baseline godot-guard.baseline.json
 godot-guard project .
 godot-guard resources .
 godot-guard scripts .
@@ -118,6 +120,15 @@ godot-guard scan .
 Use `--fail-on warn` for stricter CI, or `--fail-on none` when you want a report without failing the job.
 Use `--format sarif` when uploading results to GitHub code scanning.
 Use `--output <path>` to write reports directly from the CLI.
+
+For established projects with known issues, create a baseline and commit it:
+
+```bash
+godot-guard baseline .
+godot-guard scan . --baseline godot-guard.baseline.json
+```
+
+Baseline scans ignore the recorded issues and still report new problems.
 
 For a copyable GitHub Actions workflow and rollout advice, see:
 

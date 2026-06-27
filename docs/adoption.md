@@ -66,7 +66,18 @@ Start with summary output in early adoption. Once the project is clean, switch C
 godot-guard scan .
 ```
 
-## 5. Review Findings
+## 5. Baseline Existing Noise
+
+If the project has real issues you cannot fix immediately, create and commit a baseline:
+
+```bash
+godot-guard baseline .
+godot-guard scan . --baseline godot-guard.baseline.json
+```
+
+This keeps CI focused on new drift while older findings remain visible in the baseline file. Refresh the baseline only after reviewing why the issue list changed.
+
+## 6. Review Findings
 
 Treat findings by category:
 
@@ -76,6 +87,6 @@ Treat findings by category:
 - `resources.res_path_case_mismatch`: fix this even on Windows, because exports and CI can be case-sensitive.
 - `gdscript.*`: style or strictness checks; enable these only when your team wants that policy.
 
-## 6. Keep The Config Honest
+## 7. Keep The Config Honest
 
 Prefer narrow ignores. If an ignore pattern grows too broad, it can hide the exact drift Godot Guard is meant to catch.
