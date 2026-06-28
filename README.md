@@ -146,6 +146,8 @@ Use `--format sarif` when uploading results to GitHub code scanning.
 Use `--format github` for a compact Markdown summary suitable for a pull request or issue comment.
 Use `--output <path>` to write reports directly from the CLI.
 
+Text, Markdown, and GitHub comment reports include a plain-language guide for each issue type. The guide explains what the finding means, why it matters for the game, and a likely fix so non-programmers can review the report without decoding internal rule names.
+
 For established projects with known issues, create a baseline and commit it:
 
 ```bash

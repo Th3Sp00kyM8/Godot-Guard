@@ -101,4 +101,28 @@ describe("scan", () => {
 
     expect(result.issues).toEqual([]);
   });
+
+  it("accepts Godot 4 uid main scene settings", async () => {
+    const result = await scan({
+      root: path.join(fixtures, "uid-main-scene"),
+      command: "project",
+      configPath: undefined
+    });
+
+    expect(result.issues).toEqual([]);
+  });
+
+  it("reports missing export presets as a warning instead of a broken gameplay resource", async () => {
+    const result = await scan({
+      root: path.join(fixtures, "export-presets-reference"),
+      command: "resources",
+      configPath: undefined
+    });
+
+    expect(result.issues).toEqual([expect.objectContaining({
+      code: "resources.missing_export_presets",
+      severity: "warn",
+      message: "Export presets file is not present: res://export_presets.cfg"
+    })]);
+  });
 });

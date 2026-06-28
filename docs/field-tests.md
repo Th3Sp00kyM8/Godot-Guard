@@ -120,3 +120,24 @@ Useful future field tests:
 - a project that intentionally uses generated or runtime-only `res://` paths
 
 When a field test reveals noisy or misleading output, prefer adding a fixture that captures the behavior before changing rules.
+
+## Vibe-Coded Godot Repositories
+
+Additional public repositories that explicitly mention Godot vibe coding were scanned on 2026-06-28 with a local build after `v0.1.4`.
+
+Command pattern:
+
+```bash
+node dist/cli.js scan <project-root> --format github --fail-on none
+```
+
+| Repository | Project root tested | Result | What changed |
+| --- | --- | --- | --- |
+| [Kyle01/harmonic_gambit](https://github.com/Kyle01/harmonic_gambit) | repository root | 3 `resources.missing_export_presets` warnings | Missing `res://export_presets.cfg` now reports as export setup guidance instead of a broken gameplay resource. |
+| [tgextreme/app-scape-room-godot-vibe-coding](https://github.com/tgextreme/app-scape-room-godot-vibe-coding) | repository root | 1 `resources.missing_res_directory` warning | Dynamic scene prefix `res://scenes/Level` stays visible as a review item while `Level1.tscn` through `Level6.tscn` exist. |
+| [nekronomekron/godot-vibe-coding](https://github.com/nekronomekron/godot-vibe-coding) | repository root | clean | Confirms small vibe-coded projects can scan without noisy findings. |
+| [oyokoi451/GodotTest](https://github.com/oyokoi451/GodotTest) | repository root | clean | Confirms tiny base projects can scan cleanly. |
+| [klabchina/godot-vibe-coding](https://github.com/klabchina/godot-vibe-coding) | repository root, then `client/` | root reports nested project; `client/` scans clean | `uid://` main scene references no longer trigger a missing-main-scene warning. |
+| [ExpertLove/Godot-VibeCoding](https://github.com/ExpertLove/Godot-VibeCoding) | repository root | 1 `project.missing` error | Correctly identifies a guide/setup repository rather than a Godot project. |
+
+This field pass also motivated adding plain-language guidance directly to text, Markdown, and GitHub comment reports. The report should explain what each issue type means, why it matters for the game, and a likely fix without requiring the reader to understand Godot Guard internals.

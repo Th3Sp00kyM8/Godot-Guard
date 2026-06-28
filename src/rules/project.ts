@@ -23,7 +23,9 @@ export async function checkProjectSettings(root: string, config: GuardConfig): P
   const project = parseProjectGodot(raw);
   const mainScene = unquoteGodotString(findSetting(project, "run/main_scene") ?? findSetting(project, "config/run/main_scene"));
 
-  if (mainScene?.startsWith("res://")) {
+  if (mainScene?.startsWith("uid://")) {
+    // Godot 4 can store main_scene as a UID. Resolving UID mappings is a later, deeper check.
+  } else if (mainScene?.startsWith("res://")) {
     const mainScenePath = resPathToFilePath(root, mainScene);
     if (!(await pathExists(mainScenePath))) {
       issues.push({

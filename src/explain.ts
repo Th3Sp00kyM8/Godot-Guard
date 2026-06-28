@@ -138,6 +138,15 @@ const ISSUE_EXPLANATIONS: IssueExplanation[] = [
     fix: "Restore the missing file, update the reference, or allow the pattern in config if it is intentionally generated later."
   },
   {
+    code: "resources.missing_export_presets",
+    severity: "warn",
+    category: "resources",
+    title: "Export presets file is missing",
+    meaning: "A script checks for `res://export_presets.cfg`, but that file is not present in the repository.",
+    impact: "This usually does not break normal gameplay. It can affect automated export tools or release builds if exports are expected to run from this checkout.",
+    fix: "Create export presets in Godot's export settings, commit the file if the team expects shared export config, or allow the pattern in config if exports are intentionally local."
+  },
+  {
     code: "resources.missing_res_directory",
     severity: "warn",
     category: "resources",
