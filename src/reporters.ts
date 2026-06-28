@@ -17,6 +17,10 @@ export function formatText(result: ScanResult, options: ReporterOptions = {}): s
     return lines.join("\n");
   }
 
+  lines.push("", "Plain-language guide:");
+  lines.push(...formatPlainLanguageGuide(result, "text"));
+  lines.push("");
+
   for (const issue of result.issues) {
     const location = issue.file ? `${issue.file}${issue.line ? `:${issue.line}` : ""}` : result.root;
     lines.push(`[${issue.severity}] ${issue.code} ${location}`);
@@ -46,6 +50,8 @@ export function formatMarkdown(result: ScanResult, options: ReporterOptions = {}
     return lines.join("\n");
   }
 
+  lines.push("", "## Plain-Language Guide", "");
+  lines.push(...formatPlainLanguageGuide(result, "markdown"));
   lines.push("", "## Issues", "");
 
   for (const issue of result.issues) {
@@ -81,6 +87,9 @@ export function formatGithub(result: ScanResult, options: ReporterOptions = {}):
   if (options.summaryOnly) {
     return lines.join("\n");
   }
+
+  lines.push("", "### Plain-language guide", "");
+  lines.push(...formatPlainLanguageGuide(result, "github"));
 
   lines.push("", "| Severity | Code | Location | Message |");
   lines.push("| --- | --- | --- | --- |");
@@ -168,6 +177,29 @@ function formatSummaryLines(result: ScanResult): string[] {
     `Severity: ${formatCounts(severityCounts)}`,
     `Codes: ${formatCounts(codeCounts)}`
   ];
+
+  return lines;
+}
+
+function formatPlainLanguageGuide(result: ScanResult, format: "text" | "markdown" | "github"): string[] {
+  const codes = [...new Set(result.issues.map((issue) => issue.code))].sort();
+  const lines: string[] = [];
+
+  for (const code of codes) {
+    const explanation = getIssueExplanation(code);
+    if (!explanation) {
+      lines.push(format === "text"
+        ? `- ${code}: Review the issue message and location. Risk: this may point to project drift. Fix: inspect the referenced file or config.`
+        : `- \`${code}\`: Review the issue message and location. **Risk:** this may point to project drift. **Fix:** inspect the referenced file or config.`);
+      continue;
+    }
+
+    if (format === "text") {
+      lines.push(`- ${code}: ${explanation.meaning} Risk: ${explanation.impact} Fix: ${explanation.fix}`);
+    } else {
+      lines.push(`- \`${code}\`: ${explanation.meaning} **Risk:** ${explanation.impact} **Fix:** ${explanation.fix}`);
+    }
+  }
 
   return lines;
 }

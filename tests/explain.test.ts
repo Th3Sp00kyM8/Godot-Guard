@@ -15,6 +15,7 @@ const expectedCodes = [
   "project.nested_project_found",
   "project.required_autoload_missing",
   "project.required_input_action_missing",
+  "resources.missing_export_presets",
   "resources.missing_res_directory",
   "resources.missing_res_path",
   "resources.res_path_case_mismatch"
@@ -34,6 +35,13 @@ describe("explain", () => {
     expect(output).toContain("resources.missing_res_path");
     expect(output).toContain("What it means:");
     expect(output).toContain("How to fix:");
+  });
+
+  it("explains missing export presets as a warning", () => {
+    const explanation = getIssueExplanation("resources.missing_export_presets");
+
+    expect(explanation?.severity).toBe("warn");
+    expect(explanation?.impact).toContain("normal gameplay");
   });
 
   it("formats a discoverable list when no issue code is provided", () => {

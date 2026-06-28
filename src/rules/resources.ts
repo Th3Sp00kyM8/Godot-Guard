@@ -57,14 +57,17 @@ export async function checkResourceReferences(root: string, config: GuardConfig)
           continue;
         }
 
+        const isMissingExportPresets = resPath === "res://export_presets.cfg";
         const looksLikeDirectory = !hasFileExtension(resPath);
         issues.push({
-          code: looksLikeDirectory ? "resources.missing_res_directory" : "resources.missing_res_path",
-          severity: looksLikeDirectory ? "warn" : "error",
-          message: looksLikeDirectory ? `Missing resource directory or path prefix: ${resPath}` : `Missing resource reference: ${resPath}`,
+          code: missingResourceCode(resPath, looksLikeDirectory),
+          severity: looksLikeDirectory || isMissingExportPresets ? "warn" : "error",
+          message: missingResourceMessage(resPath, looksLikeDirectory, isMissingExportPresets),
           file: relative,
           line: lineForIndex(raw, reference.index),
-          suggestion: "Restore the missing file, update the resource path, or allow the pattern in config."
+          suggestion: isMissingExportPresets
+            ? "Create export presets if this project should export from CI, or allow this path if export settings are intentionally local."
+            : "Restore the missing file, update the resource path, or allow the pattern in config."
         });
         continue;
       }
@@ -87,4 +90,22 @@ export async function checkResourceReferences(root: string, config: GuardConfig)
 
 function lineForIndex(raw: string, index: number): number {
   return raw.slice(0, index).split(/\r?\n/).length;
+}
+
+function missingResourceCode(resPath: string, looksLikeDirectory: boolean): Issue["code"] {
+  if (resPath === "res://export_presets.cfg") {
+    return "resources.missing_export_presets";
+  }
+
+  return looksLikeDirectory ? "resources.missing_res_directory" : "resources.missing_res_path";
+}
+
+function missingResourceMessage(resPath: string, looksLikeDirectory: boolean, isMissingExportPresets: boolean): string {
+  if (isMissingExportPresets) {
+    return "Export presets file is not present: res://export_presets.cfg";
+  }
+
+  return looksLikeDirectory
+    ? `Missing resource directory or path prefix: ${resPath}`
+    : `Missing resource reference: ${resPath}`;
 }

@@ -25,6 +25,8 @@ describe("reporters", () => {
     const markdown = formatMarkdown(result);
 
     expect(markdown).toContain("# Godot Guard Report");
+    expect(markdown).toContain("## Plain-Language Guide");
+    expect(markdown).toContain("**Risk:** Scenes, scripts, shaders, or resources may fail to load");
     expect(markdown).toContain("## Issues");
     expect(markdown).toContain("`scenes/Main.tscn:3`");
   });
@@ -34,6 +36,8 @@ describe("reporters", () => {
 
     expect(markdown).toContain("## Godot Guard");
     expect(markdown).toContain("Found **1** issue(s).");
+    expect(markdown).toContain("### Plain-language guide");
+    expect(markdown).toContain("**Fix:** Restore the missing file, update the reference");
     expect(markdown).toContain("| Severity | Code | Location | Message |");
     expect(markdown).toContain("| error | `resources.missing_res_path` | `scenes/Main.tscn:3` | Missing resource reference: res://missing.gd |");
   });
