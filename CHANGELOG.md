@@ -4,6 +4,8 @@ All notable changes to Godot Guard will be documented in this file.
 
 ## Unreleased
 
+## 0.1.5 - 2026-06-28
+
 - Added plain-language guidance to text, Markdown, and GitHub comment reports.
 - Changed missing `res://export_presets.cfg` findings to warnings for local export setup files.
 - Stopped warning when `run/main_scene` uses a Godot 4 `uid://` main scene reference.
