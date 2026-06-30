@@ -48,4 +48,25 @@ describe("initConfig", () => {
       "^third_party/"
     ]);
   });
+
+  it("creates a vibe profile config", async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), "godot-guard-init-"));
+    tempDirs.push(root);
+
+    const result = await initConfig(root, false, "vibe");
+    const raw = await readFile(result.configPath, "utf8");
+    const config = JSON.parse(raw);
+
+    expect(config.gdscript.requireReturnTypes).toBe(false);
+    expect(config.gdscript.requireTypedVars).toBe(false);
+    expect(config.ignoredPathPatterns).toEqual([
+      "^tests/",
+      "^addons/",
+      "^prototypes/",
+      "^prototype/",
+      "^scratch/",
+      "^tmp/"
+    ]);
+    expect(config.allowedMissingResourcePatterns).toEqual([]);
+  });
 });

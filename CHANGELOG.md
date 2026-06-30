@@ -4,6 +4,10 @@ All notable changes to Godot Guard will be documented in this file.
 
 ## Unreleased
 
+## 0.1.8 - 2026-06-30
+
+- Added `godot-guard init --profile vibe` for early AI-assisted Godot projects with local scratch and prototype folders.
+
 ## 0.1.7 - 2026-06-30
 
 - Updated GitHub Actions workflows and copyable workflow examples to use `actions/checkout@v5` and `actions/setup-node@v5`.
