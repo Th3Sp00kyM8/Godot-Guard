@@ -4,6 +4,10 @@ All notable changes to Godot Guard will be documented in this file.
 
 ## Unreleased
 
+## 0.1.7 - 2026-06-30
+
+- Updated GitHub Actions workflows and copyable workflow examples to use `actions/checkout@v5` and `actions/setup-node@v5`.
+
 ## 0.1.6 - 2026-06-30
 
 - Updated GitHub Actions workflows and copyable workflow examples to use Node.js 24.
