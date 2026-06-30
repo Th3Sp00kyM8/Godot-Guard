@@ -3,7 +3,7 @@ import path from "node:path";
 import { pathExists } from "./filesystem.js";
 import type { InitResult } from "./types.js";
 
-export type InitProfile = "default" | "mature-project";
+export type InitProfile = "default" | "vibe" | "mature-project";
 
 const DEFAULT_CONFIG = {
   requiredAutoloads: [],
@@ -29,6 +29,18 @@ const MATURE_PROJECT_CONFIG = {
   ]
 };
 
+const VIBE_CONFIG = {
+  ...DEFAULT_CONFIG,
+  ignoredPathPatterns: [
+    "^tests/",
+    "^addons/",
+    "^prototypes/",
+    "^prototype/",
+    "^scratch/",
+    "^tmp/"
+  ]
+};
+
 export async function initConfig(root: string, force: boolean, profile: InitProfile = "default"): Promise<InitResult> {
   const resolvedRoot = path.resolve(root);
   const configPath = path.join(resolvedRoot, "godot-guard.config.json");
@@ -46,6 +58,10 @@ export async function initConfig(root: string, force: boolean, profile: InitProf
 }
 
 function configForProfile(profile: InitProfile): typeof DEFAULT_CONFIG {
+  if (profile === "vibe") {
+    return VIBE_CONFIG;
+  }
+
   if (profile === "mature-project") {
     return MATURE_PROJECT_CONFIG;
   }

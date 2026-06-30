@@ -72,6 +72,7 @@ godot-guard --version
 
 ```bash
 godot-guard init .
+godot-guard init . --profile vibe
 godot-guard init . --profile mature-project
 godot-guard init-ci .
 godot-guard init-ci . --pr-comment
@@ -114,6 +115,8 @@ Create `godot-guard.config.json` in your Godot project root:
 ```
 
 Config problems are reported as `config.*` issues, including invalid JSON, wrong field types, and invalid regex patterns.
+
+Use `godot-guard init . --profile vibe` for early AI-assisted projects where you want local scratch/prototype folders ignored, while still reporting broken real scene, script, and asset references.
 
 ## CI
 
@@ -167,6 +170,7 @@ For a copyable GitHub Actions workflow and rollout advice, see:
 - `examples/github-actions/godot-guard-pr-comment.yml`
 - `examples/github-actions/godot-guard-sarif.yml`
 - `examples/configs/low-noise.json`
+- `examples/configs/vibe.json`
 - `examples/configs/mature-project.json`
 - `examples/configs/strict.json`
 

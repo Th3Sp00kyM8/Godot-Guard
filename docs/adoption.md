@@ -24,6 +24,14 @@ If the summary is noisy, initialize a config and ignore intentional fixture or g
 godot-guard init .
 ```
 
+For a new AI-assisted or vibe-coded project, start with the beginner-friendly profile:
+
+```bash
+godot-guard init . --profile vibe
+```
+
+It ignores local scratch and prototype folders while still reporting broken real scene, script, and asset references.
+
 ## 2. Add A Low-Noise Config
 
 Start with `examples/configs/low-noise.json` and adapt it for your project. Common ignore patterns:

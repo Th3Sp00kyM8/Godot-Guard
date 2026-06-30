@@ -209,8 +209,8 @@ function parseArgs(args: string[]): ParsedArgs {
 
     if (arg === "--profile") {
       const value = args[index + 1];
-      if (value !== "default" && value !== "mature-project") {
-        throw new Error("--profile must be `default` or `mature-project`.");
+      if (value !== "default" && value !== "vibe" && value !== "mature-project") {
+        throw new Error("--profile must be `default`, `vibe`, or `mature-project`.");
       }
       profile = value;
       index += 1;
@@ -318,7 +318,7 @@ Options:
   --baseline <path>             Write or apply a baseline file. Defaults to ${DEFAULT_BASELINE_FILE} for baseline.
   --pr-comment                  Generate a pull request comment workflow when using init-ci.
   --sarif                       Generate a GitHub code scanning workflow when using init-ci.
-  --profile default|mature-project
+  --profile default|vibe|mature-project
                                 Config profile for init. Defaults to default.
   --config <path>               Config path relative to the project root.
   --force                       Overwrite config or workflow when using init commands.
