@@ -1,0 +1,44 @@
+name: Field test report
+description: Share results from running Godot Guard on a real Godot project.
+title: "[Field Test]: "
+labels: ["field-test"]
+body:
+  - type: input
+    id: project
+    attributes:
+      label: Project tested
+      description: Link the public repository if possible.
+      placeholder: https://github.com/example/godot-game
+    validations:
+      required: true
+  - type: input
+    id: godot
+    attributes:
+      label: Godot version
+      placeholder: "4.3, 4.4, 4.5, 4.6, unknown"
+  - type: textarea
+    id: command
+    attributes:
+      label: Command used
+      render: shell
+      placeholder: npx godot-guard scan . --summary
+    validations:
+      required: true
+  - type: textarea
+    id: results
+    attributes:
+      label: Results
+      description: Summarize error, warning, and info counts. Include issue codes if useful.
+      placeholder: 0 errors, 2 warnings. Both warnings were missing path prefixes in generated test content.
+    validations:
+      required: true
+  - type: textarea
+    id: false_positives
+    attributes:
+      label: False positives or noisy output
+      description: What looked wrong, confusing, or too noisy?
+  - type: textarea
+    id: clarity
+    attributes:
+      label: Was the report easy to act on?
+      description: Note whether the plain-language guidance made the result understandable.

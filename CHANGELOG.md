@@ -4,6 +4,10 @@ All notable changes to Godot Guard will be documented in this file.
 
 ## Unreleased
 
+## 0.1.9 - 2026-06-30
+
+- Added contribution guidance and issue templates for bug reports and real-project field tests.
+
 ## 0.1.8 - 2026-06-30
 
 - Added `godot-guard init --profile vibe` for early AI-assisted Godot projects with local scratch and prototype folders.

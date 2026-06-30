@@ -12,6 +12,8 @@ AI-assisted coding can move fast, but Godot projects are more than code. A proje
 
 Godot Guard is designed to be a small local safety pass you can run before opening a pull request, shipping a build, or asking an AI agent to keep working.
 
+Community field tests are welcome. If you run Godot Guard on a public Godot project, open a field-test issue with the command, issue counts, false positives, and whether the plain-language report helped.
+
 ## Current Checks
 
 - Missing `project.godot`
@@ -185,6 +187,10 @@ npm run check
 This includes `npm pack --dry-run` so the tarball contents can be reviewed before publishing.
 
 For the full release checklist, see `docs/release.md`.
+
+## Contributing
+
+See `CONTRIBUTING.md` for local development, rule-design guidance, and field-test reporting notes.
 
 ## Scope
 
